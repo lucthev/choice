@@ -1,0 +1,32 @@
+{
+  "name": "choice",
+  "version": "0.0.1",
+  "description": "Unobtrusively save and restore a text selection.",
+  "main": "dist/choice.min.js",
+  "scripts": {
+    "test": "npm run js && ./node_modules/.bin/grunt",
+    "js": "./node_modules/.bin/gulp",
+    "dev": "./node_modules/.bin/gulp watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/lucthev/choice"
+  },
+  "author": "Luc Thevenard <lucthevenard@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lucthev/choice/issues"
+  },
+  "homepage": "https://github.com/lucthev/choice",
+  "devDependencies": {
+    "gulp": "^3.6.1",
+    "gulp-browserify": "^0.5.0",
+    "gulp-uglify": "^0.2.1",
+    "gulp-rename": "^1.2.0",
+    "gulp-jshint": "^1.5.3",
+    "jshint-stylish": "^0.1.5",
+    "grunt": "^0.4.4",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-jasmine": "^0.6.3"
+  }
+}
