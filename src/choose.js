@@ -23,7 +23,8 @@ Choice.prototype.getSelection = function () {
   var sel = window.getSelection(),
       pos
 
-  if (!sel.rangeCount) return false
+  if (!sel.rangeCount || document.activeElement !== this.elem)
+    return false
 
   if (sel.isCollapsed)
     return encodePosition(this.elem, sel.anchorNode, sel.anchorOffset, this.inline)

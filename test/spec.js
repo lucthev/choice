@@ -78,6 +78,7 @@ describe('Choose', function () {
 
     beforeEach(function () {
       this.elem = document.createElement('article')
+      this.elem.setAttribute('contenteditable', true)
 
       document.body.appendChild(this.elem)
 
@@ -196,6 +197,8 @@ describe('Choose', function () {
     })
 
     xit('should account for edge cases.', function () {
+
+      // This test is failing; it has something to do with the space before 'three'.
       placeCursor(this.elem, '<p>One <strong><em>two<br>|</em></strong> three|</p>', true)
 
       expect(this.Choose.getSelection())
@@ -247,7 +250,7 @@ describe('Choose', function () {
     })
 
     // Failing in Firefox
-    xit('should return false when the cursor is not in the selection.', function () {
+    it('should return false when the cursor is not in the selection.', function () {
       placeCursor(this.elem, '<p>Stuff</p>')
 
       expect(this.Choose.getSelection())
@@ -790,6 +793,20 @@ describe('Choose', function () {
       expect(sel.isCollapsed).toBe(true)
       expect(range.startContainer).toEqual(target)
       expect(range.startOffset).toEqual(3)
+    })
+
+    it('should restore the selection (21).', function () {
+      placeCursor(this.elem, '|<p>A</p><p>B</p>')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          range = sel.getRangeAt(0),
+          target = this.elem.firstChild.firstChild
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(range.startContainer).toEqual(target)
+      expect(range.startOffset).toEqual(0)
     })
   })
 })
