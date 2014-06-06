@@ -1,13 +1,15 @@
 'use strict';
 
-function isText (node) {
-  return node && node.nodeType === Node.TEXT_NODE
-}
+var utils = require('./utils')
 
-function isElem (node) {
-  return node && node.nodeType === Node.ELEMENT_NODE
-}
-
+/**
+ * textBefore(root, node) gets the length of the text before the
+ * given node relative to the element 'root'.
+ *
+ * @param {Element} root
+ * @param {Node} node
+ * @return {Int}
+ */
 function textBefore (root, node) {
   var length = 0
 
@@ -20,11 +22,11 @@ function textBefore (root, node) {
 
     node = node.previousSibling
 
-    while (isElem(node) && node.lastChild) {
+    while (utils.isElem(node) && node.lastChild) {
       node = node.lastChild
     }
 
-    if (isText(node))
+    if (utils.isText(node))
       length += node.data.length
     else if (node.nodeName === 'BR') {
       // <br>s count as a newline character.
@@ -36,22 +38,25 @@ function textBefore (root, node) {
   return length
 }
 
-function encodePosition (root, node, offset) {
-  var children = Array.prototype.slice.call(root.childNodes),
-      child = node,
+/**
+ * encodePosition(root, node, offset, inline) encodes the position
+ * of the selection within root, based on the current node and
+ * offset. If inline is truthy, encodes it a little differently.
+ *
+ * @param {Element} root
+ * @param {Node} node
+ * @param {Int} offset
+ * @param {Boolean} inline
+ * @return {Int || Array}
+ */
+function encodePosition (root, node, offset, inline) {
+  var child,
+      children,
       textIndex,
       childIndex
 
-  while (child.parentNode && child.parentNode !== root)
-    child = child.parentNode
-
-  childIndex = children.indexOf(child)
-
-  // If the selection is not in the root's tree, do nothing.
-  if (childIndex < 0) return false
-
   while (node) {
-    if (isText(node) || node.nodeName === 'BR')
+    if (utils.isText(node) || node.nodeName === 'BR')
       break
     else if (offset < node.childNodes.length) {
       node = node.childNodes[offset]
@@ -62,7 +67,7 @@ function encodePosition (root, node, offset) {
     } else {
       node = node.lastChild
 
-      if (isText(node))
+      if (utils.isText(node))
         offset = node.data.length
       else if (node.nodeName === 'BR')
         offset = 1
@@ -71,9 +76,24 @@ function encodePosition (root, node, offset) {
     }
   }
 
+  // Get immediate child of root in which node is in.
+  if (!inline) {
+    child = node
+    children = utils.toArray(root.childNodes)
+
+    while (child.parentNode && child.parentNode !== root)
+      child = child.parentNode
+
+    childIndex = children.indexOf(child)
+
+    // If the selection is not in the root's tree, do nothing.
+    if (childIndex < 0) return false
+
+  } else child = root
+
   textIndex = textBefore(child, node) + offset
 
-  return [childIndex, textIndex]
+  return inline ? textIndex : [childIndex, textIndex]
 }
 
 module.exports = encodePosition
