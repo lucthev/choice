@@ -475,12 +475,11 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
           target = this.elem.firstChild.firstChild
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(0)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(0)
     })
 
     it('should restore the selection (2).', function () {
@@ -489,12 +488,11 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
           target = this.elem.firstChild.firstChild
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(3)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(3)
     })
 
     it('should restore the selection (3).', function () {
@@ -503,12 +501,11 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
           target = this.elem.firstChild.childNodes[1].firstChild
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(2)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(2)
     })
 
     it('should restore the selection (4).', function () {
@@ -517,12 +514,11 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
           target = this.elem.firstChild.firstChild
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(4)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(4)
     })
 
     it('should restore the selection (5).', function () {
@@ -531,14 +527,13 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
 
           // We actually expect the cursor to be IN the <strong>
           target = this.elem.firstChild.childNodes[1].firstChild
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(3)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(3)
     })
 
     it('should restore the selection (6).', function () {
@@ -547,12 +542,11 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
           target = this.elem.firstChild.childNodes[2]
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(6)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(6)
     })
 
     it('should restore the selection (7).', function () {
@@ -561,12 +555,11 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
           target = this.elem.firstChild.firstChild
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(4)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(4)
     })
 
     it('should restore the selection (8).', function () {
@@ -578,14 +571,13 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
 
           // The selection should get bumped back to the first text node.
           target = this.elem.firstChild.firstChild
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(4)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(4)
     })
 
     it('should restore the selection (9).', function () {
@@ -594,12 +586,11 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
           target = this.elem.firstChild.childNodes[2]
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(4)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(4)
     })
 
     it('should restore the selection (9).', function () {
@@ -608,12 +599,11 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
           target = this.elem.firstChild.childNodes[0]
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(4)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(4)
     })
 
     it('should restore the selection (10).', function () {
@@ -622,12 +612,11 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
           target = this.elem.firstChild.childNodes[0]
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(4)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(4)
     })
 
     it('should restore the selection (11).', function () {
@@ -636,12 +625,11 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
           target = this.elem.firstChild.childNodes[0]
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(4)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(4)
     })
 
     it('should restore the selection (12).', function () {
@@ -650,12 +638,11 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
           target = document.querySelector('#s').firstChild
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(3)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(3)
     })
 
     it('should restore the selection (13).', function () {
@@ -664,12 +651,11 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
           target = document.querySelector('#s').firstChild
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(3)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(3)
     })
 
     it('should restore the selection (14).', function () {
@@ -678,12 +664,11 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
           target = document.querySelector('#s').firstChild
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(3)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(3)
     })
 
     it('should restore the selection (15).', function () {
@@ -692,12 +677,11 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
           target = this.elem.firstChild
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(0)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(0)
     })
 
     it('should restore the selection (16).', function () {
@@ -706,12 +690,11 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
           target = this.elem.firstChild
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(2)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(2)
     })
 
     it('should restore the selection (17).', function () {
@@ -720,12 +703,11 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
           target = this.elem.firstChild.childNodes[2]
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(0)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(0)
     })
 
     it('should restore the selection (18).', function () {
@@ -737,12 +719,11 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
           target = document.querySelector('#e').firstChild
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(6)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(6)
     })
 
     it('should restore the selection (19).', function () {
@@ -754,14 +735,13 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
 
           // We expect the cursor to be at the beginning of 'the woods'
           target = document.querySelector('#e').nextSibling
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(0)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(0)
     })
 
     it('should restore the selection (20).', function () {
@@ -773,12 +753,11 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
           target = document.querySelector('#e').nextSibling
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(0)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(0)
     })
 
     it('should restore the selection (21).', function () {
@@ -787,12 +766,11 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
           target = this.elem.childNodes[1].firstChild
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(3)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(3)
     })
 
     it('should restore the selection (21).', function () {
@@ -801,12 +779,84 @@ describe('Choose', function () {
       this.Choose.restore(this.Choose.getSelection())
 
       var sel = window.getSelection(),
-          range = sel.getRangeAt(0),
           target = this.elem.firstChild.firstChild
 
       expect(sel.isCollapsed).toBe(true)
-      expect(range.startContainer).toEqual(target)
-      expect(range.startOffset).toEqual(0)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(0)
     })
+
+    /**
+     * Non-collapsed selections, now. Just a few tricky cases.
+     */
+
+    it('should restore non-collapsed selections.', function () {
+      placeCursor(this.elem, '|<p>One</p><p>Two</p><p>Three</p>|')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          start = this.elem.firstChild.firstChild,
+          end = this.elem.lastChild.firstChild
+
+      expect(sel.isCollapsed).toBe(false)
+      expect(sel.anchorNode).toEqual(start)
+      expect(sel.anchorOffset).toEqual(0)
+      expect(sel.focusNode).toEqual(end)
+      expect(sel.focusOffset).toEqual(5)
+    })
+
+    it('should restore non-collapsed selections (2).', function () {
+      placeCursor(this.elem, '<h2>|<br>|<br></h2>')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          start = this.elem.firstChild,
+          end = this.elem.firstChild
+
+      expect(sel.isCollapsed).toBe(false)
+      expect(sel.anchorNode).toEqual(start)
+      expect(sel.anchorOffset).toEqual(0)
+      expect(sel.focusNode).toEqual(end)
+      expect(sel.focusOffset).toEqual(1)
+    })
+
+    it('should restore non-collapsed selections (3).', function () {
+      placeCursor(this.elem,
+        '<h2>Thi|ngs</h2>' +
+        '<p><code>Words</code></p>' +
+        '<ul><li id="li">List <em>|item</em></li></ul>', true)
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          start = document.querySelector('#li').firstChild,
+          end = this.elem.firstChild.firstChild
+
+      expect(sel.isCollapsed).toBe(false)
+      expect(sel.anchorNode).toEqual(start)
+      expect(sel.anchorOffset).toEqual(5)
+      expect(sel.focusNode).toEqual(end)
+      expect(sel.focusOffset).toEqual(3)
+    })
+  })
+
+  describe('#restore (inline mode)', function () {
+
+    beforeEach(function () {
+      this.elem = document.createElement('article')
+      this.elem.setAttribute('contenteditable', true)
+
+      document.body.appendChild(this.elem)
+
+      // Inline mode:
+      this.Choose = new Choose(this.elem, true)
+    })
+
+    afterEach(function () {
+      document.body.removeChild(this.elem)
+    })
+
   })
 })
