@@ -15,6 +15,11 @@ function Choice (elem, inline) {
   if (!(this instanceof Choice))
     return new Choice(elem, inline)
 
+  // Because of some Firefox bugs, Choice doesn't work with just any
+  // element.
+  if (!elem.contentEditable)
+    throw new Error('Choice requires a contentEditable element.')
+
   this.elem = elem
   this.inline = !!inline
 }
