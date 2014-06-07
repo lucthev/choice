@@ -78,11 +78,16 @@ function encodePosition (root, node, offset, inline) {
 
   // Get immediate child of root in which node is in.
   if (!inline) {
-    child = node
-    children = utils.toArray(root.childNodes)
 
-    while (child.parentNode && child.parentNode !== root)
+    // List items count.
+    children = utils.flattenLists(root)
+    child = node
+
+    while (child.parentNode && child.parentNode !== root &&
+           !/[OU]L/.test(child.parentNode.nodeName)) {
+
       child = child.parentNode
+    }
 
     childIndex = children.indexOf(child)
 

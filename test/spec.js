@@ -291,6 +291,54 @@ describe('Choice', function () {
 
       document.body.removeChild(input)
     })
+
+    it('should consider list items as blocks.', function () {
+      placeCursor(this.elem, '<ul><li>One</li><li>|Two</li><li>Three</li></ul>')
+
+      expect(this.Choice.getSelection())
+        .toEqual([1, 0])
+
+      placeCursor(this.elem, '<ul><li>One</li><li>Two|</li><li>Three</li></ul>')
+
+      expect(this.Choice.getSelection())
+        .toEqual([1, 3])
+    })
+
+    it('should consider list items as blocks (2).', function () {
+      placeCursor(this.elem, '<ul><li>One</li><li>Line 1<br>|<br></li><li>Three</li></ul>')
+
+      expect(this.Choice.getSelection())
+        .toEqual([1, 7])
+    })
+
+    it('should consider list items as blocks (3).', function () {
+      placeCursor(this.elem, '<ol></ol><ul><li>One</li><li>Line 1<br>|<br></li><li>Three</li></ul>')
+
+      expect(this.Choice.getSelection())
+        .toEqual([1, 7])
+    })
+
+    it('should consider list items as blocks (4).', function () {
+      placeCursor(this.elem,
+        '<ol><li>Things</li></ol>' +
+        '<ul><li>One</li><li>T|wo</li></ul>')
+
+      expect(this.Choice.getSelection())
+        .toEqual([2, 1])
+    })
+
+    it('should consider list items as blocks (5).', function () {
+      placeCursor(this.elem,
+        '|<ol><li>Things</li></ol>' +
+        '<p>Random paragraph.</p>' +
+        '<ul><li>One</li><li>Two</li></ul>|', true)
+
+      expect(this.Choice.getSelection())
+        .toEqual({
+          start: [3, 3],
+          end: [0, 0]
+        })
+    })
   })
 
   describe('#getSelection (inline mode)', function () {
@@ -839,6 +887,116 @@ describe('Choice', function () {
       expect(sel.anchorOffset).toEqual(5)
       expect(sel.focusNode).toEqual(end)
       expect(sel.focusOffset).toEqual(3)
+    })
+
+    /**
+     * Lists
+     */
+
+    it('should consider list items as blocks.', function () {
+      placeCursor(this.elem, '<ul><li>One</li><li id="li">|Two</li><li>Three</li></ul>')
+
+      this.Choice.restore(this.Choice.getSelection())
+
+      var sel = window.getSelection(),
+          start = document.querySelector('#li').firstChild
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(start)
+      expect(sel.anchorOffset).toEqual(0)
+
+      placeCursor(this.elem, '<ul><li>One</li><li id="li">Two|</li><li>Three</li></ul>')
+
+      this.Choice.restore(this.Choice.getSelection())
+
+      sel = window.getSelection()
+      start = document.querySelector('#li').firstChild
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(start)
+      expect(sel.anchorOffset).toEqual(3)
+    })
+
+    it('should consider list items as blocks (2).', function () {
+      placeCursor(this.elem, '<ul><li>One</li><li id="li">Line 1<br>|<br></li><li>Three</li></ul>')
+
+      this.Choice.restore(this.Choice.getSelection())
+
+      var sel = window.getSelection(),
+          start = document.querySelector('#li')
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(start)
+      expect(sel.anchorOffset).toEqual(2)
+    })
+
+    it('should consider list items as blocks (3).', function () {
+      placeCursor(this.elem, '<ol></ol><ul><li>One</li><li id="li">Line 1<br>|<br></li><li>Three</li></ul>')
+
+      var sel = window.getSelection(),
+          start = document.querySelector('#li')
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(start)
+      expect(sel.anchorOffset).toEqual(2)
+    })
+
+    it('should consider list items as blocks (4).', function () {
+      placeCursor(this.elem,
+        '<ol><li>Things</li></ol>' +
+        '<ul><li>One</li><li id="li">T|wo</li></ul>')
+
+      this.Choice.restore(this.Choice.getSelection())
+
+      var sel = window.getSelection(),
+          start = document.querySelector('#li').firstChild
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(start)
+      expect(sel.anchorOffset).toEqual(1)
+    })
+
+    it('should consider list items as blocks (5).', function () {
+      placeCursor(this.elem,
+        '|<ol><li id="li1">Things</li></ol>' +
+        '<p>Random paragraph.</p>' +
+        '<ul><li>One</li><li id="li2">Two</li></ul>|', true)
+
+      this.Choice.restore(this.Choice.getSelection())
+
+      var sel = window.getSelection(),
+          start = document.querySelector('#li2').firstChild,
+          end = document.querySelector('#li1').firstChild
+
+      expect(sel.isCollapsed).toBe(false)
+      expect(sel.anchorNode).toEqual(start)
+      expect(sel.anchorOffset).toEqual(3)
+      expect(sel.focusNode).toEqual(end)
+      expect(sel.focusOffset).toEqual(0)
+    })
+
+    it('should consider list items as blocks (6).', function () {
+      placeCursor(this.elem,
+        '<ul><li>One item</li></ul>' +
+        '<p>1.|Will be a list item</p>')
+
+      var s = this.Choice.getSelection()
+
+      placeCursor(this.elem,
+        '<ul><li>One item</li>' +
+        '<li id="li">Will be a list item</li></ul>')
+
+      // Because we've gotten rid of the the '1.'
+      s[1] -= 2
+
+      this.Choice.restore(s)
+
+      var sel = window.getSelection(),
+          start = document.querySelector('#li').firstChild
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(start)
+      expect(sel.anchorOffset).toEqual(0)
     })
   })
 

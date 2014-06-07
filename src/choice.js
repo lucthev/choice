@@ -62,14 +62,14 @@ Choice.prototype.restore = function (selection) {
     start = decodePosition(this.elem, selection.start)
     end = decodePosition(this.elem, selection.end)
   } else if (!this.inline && utils.isArray(selection)) {
-    start = decodePosition(this.elem.childNodes[selection[0]], selection[1])
+    start = decodePosition(utils.listIndex(this.elem, selection[0]), selection[1])
   } else if (!this.inline && utils.isArray(selection.start, selection.end)) {
     start = decodePosition(
-      this.elem.childNodes[selection.start[0]],
+      utils.listIndex(this.elem, selection.start[0]),
       selection.start[1]
     )
     end = decodePosition(
-      this.elem.childNodes[selection.end[0]],
+      utils.listIndex(this.elem, selection.end[0]),
       selection.end[1]
     )
   } else
