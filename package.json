@@ -1,8 +1,8 @@
 {
-  "name": "choose",
+  "name": "choice",
   "version": "0.0.1",
-  "description": "Unobtrusively save and restore a text selection.",
-  "main": "dist/choose.min.js",
+  "description": "A module for working with selections.",
+  "main": "dist/choice.min.js",
   "scripts": {
     "test": "npm run js && ./node_modules/.bin/grunt",
     "js": "./node_modules/.bin/gulp",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/lucthev/choose"
+    "url": "git://github.com/lucthev/choice"
   },
   "author": "Luc Thevenard <lucthevenard@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/lucthev/choose/issues"
+    "url": "https://github.com/lucthev/choice/issues"
   },
-  "homepage": "https://github.com/lucthev/choose",
+  "homepage": "https://github.com/lucthev/choice",
   "devDependencies": {
     "gulp": "^3.6.1",
     "gulp-browserify": "^0.5.0",

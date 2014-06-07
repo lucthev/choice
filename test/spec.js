@@ -1,4 +1,4 @@
-/* global describe, it, expect, Choose, beforeEach, afterEach, xit */
+/* global describe, it, expect, Choice, beforeEach, afterEach, xit */
 
 'use strict';
 
@@ -72,7 +72,7 @@ function placeCursor (elem, html, backwards) {
   } else elem.innerHTML = html
 }
 
-describe('Choose', function () {
+describe('Choice', function () {
 
   describe('#getSelection (rich mode)', function () {
 
@@ -82,7 +82,7 @@ describe('Choose', function () {
 
       document.body.appendChild(this.elem)
 
-      this.Choose = new Choose(this.elem)
+      this.Choice = new Choice(this.elem)
     })
 
     afterEach(function () {
@@ -92,49 +92,49 @@ describe('Choose', function () {
     it('returns a tuple (two-element array) when the selection is collapsed.', function () {
       placeCursor(this.elem, '<p>Photo|graph</p>')
 
-      expect(this.Choose.getSelection()).toEqual([0, 5])
+      expect(this.Choice.getSelection()).toEqual([0, 5])
     })
 
     it('collapsed selection (2).', function () {
       placeCursor(this.elem, '<p>|Things</p>')
 
-      expect(this.Choose.getSelection()).toEqual([0, 0])
+      expect(this.Choice.getSelection()).toEqual([0, 0])
     })
 
     it('collapsed selection (3).', function () {
       placeCursor(this.elem, '<p>Things</p><h2>Words|</h2>')
 
-      expect(this.Choose.getSelection()).toEqual([1, 5])
+      expect(this.Choice.getSelection()).toEqual([1, 5])
     })
 
     it('collapsed selection (4).', function () {
       placeCursor(this.elem, '<p>One <span></span>two |three</p>')
 
-      expect(this.Choose.getSelection()).toEqual([0, 8])
+      expect(this.Choice.getSelection()).toEqual([0, 8])
     })
 
     it('collapsed selection (5).', function () {
       placeCursor(this.elem, '<p>One <span></span>two |three</p>')
 
-      expect(this.Choose.getSelection()).toEqual([0, 8])
+      expect(this.Choice.getSelection()).toEqual([0, 8])
     })
 
     it('collapsed selection (6).', function () {
       placeCursor(this.elem, '<h1>Title</h1><p>Once <strong>upon| a</strong> time')
 
-      expect(this.Choose.getSelection()).toEqual([1, 9])
+      expect(this.Choice.getSelection()).toEqual([1, 9])
     })
 
     it('should treat <br>s as newlines (collapsed selection).', function () {
       placeCursor(this.elem, '<p>Birds in<br>|the sky</p>')
 
-      expect(this.Choose.getSelection()).toEqual([0, 9])
+      expect(this.Choice.getSelection()).toEqual([0, 9])
     })
 
     it('<br>s, collapsed selection (2).', function () {
       placeCursor(this.elem, '<p>Birds in|<br>the sky</p>')
 
-      expect(this.Choose.getSelection()).toEqual([0, 8])
+      expect(this.Choice.getSelection()).toEqual([0, 8])
     })
 
     it('<br>s, collapsed selection (3).', function () {
@@ -143,13 +143,13 @@ describe('Choose', function () {
         '<h2>A subtitle</h2>' +
         '<p><em>Birds</em> in<br>the<span></span> sky|</p>')
 
-      expect(this.Choose.getSelection()).toEqual([2, 16])
+      expect(this.Choice.getSelection()).toEqual([2, 16])
     })
 
     it('should return the start and end points when selection is not collapsed.', function () {
       placeCursor(this.elem, '<p>|One</p><p>Two|</p>')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual({
           start: [0, 0],
           end: [1, 3]
@@ -161,7 +161,7 @@ describe('Choose', function () {
       // Make the same selection, but backwards.
       placeCursor(this.elem, '<p>|One</p><p>Two|</p>', true)
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual({
           end: [0, 0],
           start: [1, 3]
@@ -171,7 +171,7 @@ describe('Choose', function () {
     it('not collapsed (3).', function () {
       placeCursor(this.elem, '<h2>A ti|tle</h2><p>Ho<br>|hum</p>', true)
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual({
           start: [1, 3],
           end: [0, 4]
@@ -181,7 +181,7 @@ describe('Choose', function () {
     it('not collapsed (4).', function () {
       placeCursor(this.elem, '<h1>Things</h1><p>Words|<br>|Stuff</p><p>More</p>')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual({
           start: [1, 5],
           end: [1, 6]
@@ -189,7 +189,7 @@ describe('Choose', function () {
 
       placeCursor(this.elem, '<h1>Things</h1><p>Words|<br>|Stuff</p><p>More</p>', true)
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual({
           start: [1, 6],
           end: [1, 5]
@@ -201,7 +201,7 @@ describe('Choose', function () {
       // This test is failing; it has something to do with the space before 'three'.
       placeCursor(this.elem, '<p>One <strong><em>two<br>|</em></strong> three|</p>', true)
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual({
           start: [0, 14],
           end: [0, 8]
@@ -213,19 +213,19 @@ describe('Choose', function () {
       // This kind of behaviour can occur in Firefox.
       placeCursor(this.elem, '|<p>One</p>')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual([0, 0])
 
       placeCursor(this.elem, '<p>One</p><p>Two</p>|')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual([1, 3])
     })
 
     it('edge cases (3).', function () {
       placeCursor(this.elem, '|<p>One</p><p>Two</p>|', true)
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual({
           start: [1, 3],
           end: [0, 0]
@@ -235,17 +235,17 @@ describe('Choose', function () {
     it('edge cases (4).', function () {
       placeCursor(this.elem, '<p>A <strong><em>b|</em></strong> c</p>')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual([0, 3])
 
       placeCursor(this.elem, '<p>A <strong><em>b</em>|</strong> c</p>')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual([0, 3])
 
       placeCursor(this.elem, '<p>A <strong><em>b</em></strong>| c</p>')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual([0, 3])
     })
 
@@ -253,7 +253,7 @@ describe('Choose', function () {
     it('should return false when the cursor is not in the selection.', function () {
       placeCursor(this.elem, '<p>Stuff</p>')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toBe(false)
     })
 
@@ -268,7 +268,7 @@ describe('Choose', function () {
 
       expect(document.activeElement).toEqual(input)
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual(false)
 
       document.body.removeChild(input)
@@ -286,7 +286,7 @@ describe('Choose', function () {
 
       expect(document.activeElement).toEqual(input)
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual(false)
 
       document.body.removeChild(input)
@@ -302,7 +302,7 @@ describe('Choose', function () {
       document.body.appendChild(this.elem)
 
       // Inline mode:
-      this.Choose = new Choose(this.elem, true)
+      this.Choice = new Choice(this.elem, true)
     })
 
     afterEach(function () {
@@ -312,96 +312,96 @@ describe('Choose', function () {
     it('returns an integer when the selection is collapsed.', function () {
       placeCursor(this.elem, 'One |two')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual(4)
     })
 
     it('collapsed selection (2).', function () {
       placeCursor(this.elem, '|One two')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual(0)
     })
 
     it('collapsed selection (3).', function () {
       placeCursor(this.elem, 'Dream within a dream|')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual(20)
     })
 
     it('collapsed selection (4).', function () {
       placeCursor(this.elem, 'Black <em>o|ut</em> days')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual(7)
     })
 
     it('collapsed selection (5).', function () {
       placeCursor(this.elem, 'Man<span></span>ea|ter')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual(5)
 
       placeCursor(this.elem, 'Man<span></span>|eater')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual(3)
 
       placeCursor(this.elem, 'Man|<span></span>eater')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual(3)
     })
 
     it('should treat <br>s as newlines.', function () {
       placeCursor(this.elem, 'Black<br>water|')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual(11)
     })
 
     it('<br> newlines (2).', function () {
       placeCursor(this.elem, 'Black<br>|water')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual(6)
 
       placeCursor(this.elem, 'Black|<br>water')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual(5)
     })
 
     it('<br> newlines (3).', function () {
       placeCursor(this.elem, 'Black water|<br>')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual(11)
 
       // For some reason, two <br>s are required to make a newline.
       placeCursor(this.elem, 'Black water<br>|<br>')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual(12)
     })
 
     it('<br> newlines (4).', function () {
       placeCursor(this.elem, '|<br>Black water')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual(0)
 
       placeCursor(this.elem, '<br>|Black water')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual(1)
     })
 
     it('returns an object when the selection is not collapsed.', function () {
       placeCursor(this.elem, '|One|')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual({
           start: 0,
           end: 3
@@ -409,7 +409,7 @@ describe('Choose', function () {
 
       placeCursor(this.elem, '|One|', true)
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual({
           end: 0,
           start: 3
@@ -419,7 +419,7 @@ describe('Choose', function () {
     it('not collapsed (2).', function () {
       placeCursor(this.elem, '<bold>|We</bold> Swa|rm')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual({
           start: 0,
           end: 6
@@ -427,7 +427,7 @@ describe('Choose', function () {
 
       placeCursor(this.elem, '<bold>|We</bold> Swa|rm', true)
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual({
           end: 0,
           start: 6
@@ -437,7 +437,7 @@ describe('Choose', function () {
     it('not collapsed (3).', function () {
       placeCursor(this.elem, 'Mouthful |<em><b>of|</b></em> diamonds')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual({
           start: 9,
           end: 11
@@ -445,7 +445,7 @@ describe('Choose', function () {
 
       placeCursor(this.elem, 'Mouthful <em>|<b>of</b></em>| diamonds')
 
-      expect(this.Choose.getSelection())
+      expect(this.Choice.getSelection())
         .toEqual({
           start: 9,
           end: 11
@@ -461,7 +461,7 @@ describe('Choose', function () {
 
       document.body.appendChild(this.elem)
 
-      this.Choose = new Choose(this.elem)
+      this.Choice = new Choice(this.elem)
     })
 
     afterEach(function () {
@@ -472,7 +472,7 @@ describe('Choose', function () {
       placeCursor(this.elem, '<p>|One</p>')
 
       // Just save and restore.
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.firstChild.firstChild
@@ -485,7 +485,7 @@ describe('Choose', function () {
     it('should restore the selection (2).', function () {
       placeCursor(this.elem, '<p>One|</p>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.firstChild.firstChild
@@ -498,7 +498,7 @@ describe('Choose', function () {
     it('should restore the selection (3).', function () {
       placeCursor(this.elem, '<p>One <b>tw|o</b> three</p>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.firstChild.childNodes[1].firstChild
@@ -511,7 +511,7 @@ describe('Choose', function () {
     it('should restore the selection (4).', function () {
       placeCursor(this.elem, '<p>One |<em>two</em> three</p>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.firstChild.firstChild
@@ -524,7 +524,7 @@ describe('Choose', function () {
     it('should restore the selection (5).', function () {
       placeCursor(this.elem, '<p>One <strong>two</strong>| three</p>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
 
@@ -539,7 +539,7 @@ describe('Choose', function () {
     it('should restore the selection (6).', function () {
       placeCursor(this.elem, '<p>One <strong>two</strong> three|</p>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.firstChild.childNodes[2]
@@ -552,7 +552,7 @@ describe('Choose', function () {
     it('should restore the selection (7).', function () {
       placeCursor(this.elem, '<p>The |<span></span>Big Short</p>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.firstChild.firstChild
@@ -568,7 +568,7 @@ describe('Choose', function () {
       // need to check that case.
       placeCursor(this.elem, '<p>The <span></span>|Big Short</p>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
 
@@ -583,7 +583,7 @@ describe('Choose', function () {
     it('should restore the selection (9).', function () {
       placeCursor(this.elem, '<p>The <span></span>Big |Short</p>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.firstChild.childNodes[2]
@@ -596,7 +596,7 @@ describe('Choose', function () {
     it('should restore the selection (9).', function () {
       placeCursor(this.elem, '<p>The |<em><strong>Big</strong></em> Short</p>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.firstChild.childNodes[0]
@@ -609,7 +609,7 @@ describe('Choose', function () {
     it('should restore the selection (10).', function () {
       placeCursor(this.elem, '<p>The <em>|<strong>Big</strong></em> Short</p>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.firstChild.childNodes[0]
@@ -622,7 +622,7 @@ describe('Choose', function () {
     it('should restore the selection (11).', function () {
       placeCursor(this.elem, '<p>The <em><strong>|Big</strong></em> Short</p>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.firstChild.childNodes[0]
@@ -635,7 +635,7 @@ describe('Choose', function () {
     it('should restore the selection (12).', function () {
       placeCursor(this.elem, '<p>The <em><strong id="s">Big|</strong></em> Short</p>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = document.querySelector('#s').firstChild
@@ -648,7 +648,7 @@ describe('Choose', function () {
     it('should restore the selection (13).', function () {
       placeCursor(this.elem, '<p>The <em><strong id="s">Big</strong>|</em> Short</p>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = document.querySelector('#s').firstChild
@@ -661,7 +661,7 @@ describe('Choose', function () {
     it('should restore the selection (14).', function () {
       placeCursor(this.elem, '<p>The <em><strong id="s">Big</strong></em>| Short</p>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = document.querySelector('#s').firstChild
@@ -674,7 +674,7 @@ describe('Choose', function () {
     it('should restore the selection (15).', function () {
       placeCursor(this.elem, '<p>|<br></p>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.firstChild
@@ -687,7 +687,7 @@ describe('Choose', function () {
     it('should restore the selection (16).', function () {
       placeCursor(this.elem, '<p>Line One<br>|<br></p>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.firstChild
@@ -700,7 +700,7 @@ describe('Choose', function () {
     it('should restore the selection (17).', function () {
       placeCursor(this.elem, '<p>Line One<br>|Line Two</p>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.firstChild.childNodes[2]
@@ -716,7 +716,7 @@ describe('Choose', function () {
         '<p>There\'s a <em id="e">man in|<br></em>the woods.</p>'
       )
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = document.querySelector('#e').firstChild
@@ -732,7 +732,7 @@ describe('Choose', function () {
         '<p>There\'s a <em id="e">man in<br>|</em>the woods.</p>'
       )
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
 
@@ -750,7 +750,7 @@ describe('Choose', function () {
         '<p>There\'s a <em id="e">man in<br></em>|the woods.</p>'
       )
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = document.querySelector('#e').nextSibling
@@ -763,7 +763,7 @@ describe('Choose', function () {
     it('should restore the selection (21).', function () {
       placeCursor(this.elem, '<p>One</p><p>Two|<br><br></p><p>Three</p>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.childNodes[1].firstChild
@@ -776,7 +776,7 @@ describe('Choose', function () {
     it('should restore the selection (22).', function () {
       placeCursor(this.elem, '|<p>A</p><p>B</p>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.firstChild.firstChild
@@ -793,7 +793,7 @@ describe('Choose', function () {
     it('should restore non-collapsed selections.', function () {
       placeCursor(this.elem, '|<p>One</p><p>Two</p><p>Three</p>|')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           start = this.elem.firstChild.firstChild,
@@ -809,7 +809,7 @@ describe('Choose', function () {
     it('should restore non-collapsed selections (2).', function () {
       placeCursor(this.elem, '<h2>|<br>|<br></h2>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           start = this.elem.firstChild,
@@ -828,7 +828,7 @@ describe('Choose', function () {
         '<p><code>Words</code></p>' +
         '<ul><li id="li">List <em>|item</em></li></ul>', true)
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           start = document.querySelector('#li').firstChild,
@@ -851,7 +851,7 @@ describe('Choose', function () {
       document.body.appendChild(this.elem)
 
       // Inline mode:
-      this.Choose = new Choose(this.elem, true)
+      this.Choice = new Choice(this.elem, true)
     })
 
     afterEach(function () {
@@ -864,7 +864,7 @@ describe('Choose', function () {
       placeCursor(this.elem, '|One')
 
       // Just save and restore.
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.firstChild
@@ -877,7 +877,7 @@ describe('Choose', function () {
     it('should restore the selection (2).', function () {
       placeCursor(this.elem, 'One|')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.firstChild
@@ -890,7 +890,7 @@ describe('Choose', function () {
     it('should restore the selection (3).', function () {
       placeCursor(this.elem, 'One <b>tw|o</b> three')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.childNodes[1].firstChild
@@ -903,7 +903,7 @@ describe('Choose', function () {
     it('should restore the selection (4).', function () {
       placeCursor(this.elem, 'One |<em>two</em> three')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.firstChild
@@ -916,7 +916,7 @@ describe('Choose', function () {
     it('should restore the selection (5).', function () {
       placeCursor(this.elem, 'One <strong>two</strong>| three')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
 
@@ -931,7 +931,7 @@ describe('Choose', function () {
     it('should restore the selection (6).', function () {
       placeCursor(this.elem, 'One <strong>two</strong> three|')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.childNodes[2]
@@ -944,7 +944,7 @@ describe('Choose', function () {
     it('should restore the selection (7).', function () {
       placeCursor(this.elem, 'The |<span></span>Big Short')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.firstChild
@@ -960,7 +960,7 @@ describe('Choose', function () {
       // need to check that case.
       placeCursor(this.elem, 'The <span></span>|Big Short')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
 
@@ -975,7 +975,7 @@ describe('Choose', function () {
     it('should restore the selection (9).', function () {
       placeCursor(this.elem, 'The <span></span>Big |Short')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.childNodes[2]
@@ -988,7 +988,7 @@ describe('Choose', function () {
     it('should restore the selection (9).', function () {
       placeCursor(this.elem, 'The |<em><strong>Big</strong></em> Short')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.childNodes[0]
@@ -1001,7 +1001,7 @@ describe('Choose', function () {
     it('should restore the selection (10).', function () {
       placeCursor(this.elem, 'The <em>|<strong>Big</strong></em> Short')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.childNodes[0]
@@ -1014,7 +1014,7 @@ describe('Choose', function () {
     it('should restore the selection (11).', function () {
       placeCursor(this.elem, 'The <em><strong>|Big</strong></em> Short')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.firstChild
@@ -1027,7 +1027,7 @@ describe('Choose', function () {
     it('should restore the selection (12).', function () {
       placeCursor(this.elem, 'The <em><strong id="s">Big|</strong></em> Short')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = document.querySelector('#s').firstChild
@@ -1040,7 +1040,7 @@ describe('Choose', function () {
     it('should restore the selection (13).', function () {
       placeCursor(this.elem, 'The <em><strong id="s">Big</strong>|</em> Short')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = document.querySelector('#s').firstChild
@@ -1053,7 +1053,7 @@ describe('Choose', function () {
     it('should restore the selection (14).', function () {
       placeCursor(this.elem, 'The <em><strong id="s">Big</strong></em>| Short')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = document.querySelector('#s').firstChild
@@ -1066,7 +1066,7 @@ describe('Choose', function () {
     it('should restore the selection (15).', function () {
       placeCursor(this.elem, '|<br>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem
@@ -1079,7 +1079,7 @@ describe('Choose', function () {
     it('should restore the selection (16).', function () {
       placeCursor(this.elem, 'Line One<br>|<br>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem
@@ -1092,7 +1092,7 @@ describe('Choose', function () {
     it('should restore the selection (17).', function () {
       placeCursor(this.elem, 'Line One<br>|Line Two')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.childNodes[2]
@@ -1105,7 +1105,7 @@ describe('Choose', function () {
     it('should restore the selection (18).', function () {
       placeCursor(this.elem, 'There\'s a <em id="e">man in|<br></em>the woods.')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = document.querySelector('#e').firstChild
@@ -1118,7 +1118,7 @@ describe('Choose', function () {
     it('should restore the selection (19).', function () {
       placeCursor(this.elem, 'There\'s a <em id="e">man in<br>|</em>the woods.')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
 
@@ -1133,7 +1133,7 @@ describe('Choose', function () {
     it('should restore the selection (20).', function () {
       placeCursor(this.elem, 'There\'s a <em id="e">man in<br></em>|the woods.')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = document.querySelector('#e').nextSibling
@@ -1146,7 +1146,7 @@ describe('Choose', function () {
     it('should restore the selection (21).', function () {
       placeCursor(this.elem, 'Two|<br><br>Three')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           target = this.elem.firstChild
@@ -1163,7 +1163,7 @@ describe('Choose', function () {
     it('should restore non-collapsed selections.', function () {
       placeCursor(this.elem, '|<br>|<br>')
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           start = this.elem,
@@ -1180,7 +1180,7 @@ describe('Choose', function () {
       placeCursor(this.elem,
         '<span></span><code id="c"><strong id="li">va|r</strong> x = <em>new</em> Choi|ce</code>', true)
 
-      this.Choose.restore(this.Choose.getSelection())
+      this.Choice.restore(this.Choice.getSelection())
 
       var sel = window.getSelection(),
           end = document.querySelector('#li').firstChild,

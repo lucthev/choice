@@ -12,14 +12,14 @@ var paths = {
 }
 
 gulp.task('js', function () {
-  gulp.src('src/choose.js')
+  gulp.src('src/choice.js')
     .pipe(browserify({
-      standalone: 'Choose'
+      standalone: 'Choice'
     }))
     .pipe(uglify({
       preserveComments: 'some'
     }))
-    .pipe(rename('choose.min.js'))
+    .pipe(rename('choice.min.js'))
     .pipe(gulp.dest('./dist/'))
 })
 
