@@ -773,7 +773,7 @@ describe('Choose', function () {
       expect(sel.anchorOffset).toEqual(3)
     })
 
-    it('should restore the selection (21).', function () {
+    it('should restore the selection (22).', function () {
       placeCursor(this.elem, '|<p>A</p><p>B</p>')
 
       this.Choose.restore(this.Choose.getSelection())
@@ -845,7 +845,7 @@ describe('Choose', function () {
   describe('#restore (inline mode)', function () {
 
     beforeEach(function () {
-      this.elem = document.createElement('article')
+      this.elem = document.createElement('h2')
       this.elem.setAttribute('contenteditable', true)
 
       document.body.appendChild(this.elem)
@@ -858,5 +858,339 @@ describe('Choose', function () {
       document.body.removeChild(this.elem)
     })
 
+    // Repeating ALL the tests, but in inline mode. It may be overkill,
+    // but better safe than sorry.
+    it('should restore the selection.', function () {
+      placeCursor(this.elem, '|One')
+
+      // Just save and restore.
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          target = this.elem.firstChild
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(0)
+    })
+
+    it('should restore the selection (2).', function () {
+      placeCursor(this.elem, 'One|')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          target = this.elem.firstChild
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(3)
+    })
+
+    it('should restore the selection (3).', function () {
+      placeCursor(this.elem, 'One <b>tw|o</b> three')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          target = this.elem.childNodes[1].firstChild
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(2)
+    })
+
+    it('should restore the selection (4).', function () {
+      placeCursor(this.elem, 'One |<em>two</em> three')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          target = this.elem.firstChild
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(4)
+    })
+
+    it('should restore the selection (5).', function () {
+      placeCursor(this.elem, 'One <strong>two</strong>| three')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+
+          // We actually expect the cursor to be IN the <strong>
+          target = this.elem.childNodes[1].firstChild
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(3)
+    })
+
+    it('should restore the selection (6).', function () {
+      placeCursor(this.elem, 'One <strong>two</strong> three|')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          target = this.elem.childNodes[2]
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(6)
+    })
+
+    it('should restore the selection (7).', function () {
+      placeCursor(this.elem, 'The |<span></span>Big Short')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          target = this.elem.firstChild
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(4)
+    })
+
+    it('should restore the selection (8).', function () {
+
+      // The cursor cannot be placed in collapsed elements, so no
+      // need to check that case.
+      placeCursor(this.elem, 'The <span></span>|Big Short')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+
+          // The selection should get bumped back to the first text node.
+          target = this.elem.firstChild
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(4)
+    })
+
+    it('should restore the selection (9).', function () {
+      placeCursor(this.elem, 'The <span></span>Big |Short')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          target = this.elem.childNodes[2]
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(4)
+    })
+
+    it('should restore the selection (9).', function () {
+      placeCursor(this.elem, 'The |<em><strong>Big</strong></em> Short')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          target = this.elem.childNodes[0]
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(4)
+    })
+
+    it('should restore the selection (10).', function () {
+      placeCursor(this.elem, 'The <em>|<strong>Big</strong></em> Short')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          target = this.elem.childNodes[0]
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(4)
+    })
+
+    it('should restore the selection (11).', function () {
+      placeCursor(this.elem, 'The <em><strong>|Big</strong></em> Short')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          target = this.elem.firstChild
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(4)
+    })
+
+    it('should restore the selection (12).', function () {
+      placeCursor(this.elem, 'The <em><strong id="s">Big|</strong></em> Short')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          target = document.querySelector('#s').firstChild
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(3)
+    })
+
+    it('should restore the selection (13).', function () {
+      placeCursor(this.elem, 'The <em><strong id="s">Big</strong>|</em> Short')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          target = document.querySelector('#s').firstChild
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(3)
+    })
+
+    it('should restore the selection (14).', function () {
+      placeCursor(this.elem, 'The <em><strong id="s">Big</strong></em>| Short')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          target = document.querySelector('#s').firstChild
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(3)
+    })
+
+    it('should restore the selection (15).', function () {
+      placeCursor(this.elem, '|<br>')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          target = this.elem
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(0)
+    })
+
+    it('should restore the selection (16).', function () {
+      placeCursor(this.elem, 'Line One<br>|<br>')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          target = this.elem
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(2)
+    })
+
+    it('should restore the selection (17).', function () {
+      placeCursor(this.elem, 'Line One<br>|Line Two')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          target = this.elem.childNodes[2]
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(0)
+    })
+
+    it('should restore the selection (18).', function () {
+      placeCursor(this.elem, 'There\'s a <em id="e">man in|<br></em>the woods.')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          target = document.querySelector('#e').firstChild
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(6)
+    })
+
+    it('should restore the selection (19).', function () {
+      placeCursor(this.elem, 'There\'s a <em id="e">man in<br>|</em>the woods.')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+
+          // We expect the cursor to be at the beginning of 'the woods'
+          target = document.querySelector('#e').nextSibling
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(0)
+    })
+
+    it('should restore the selection (20).', function () {
+      placeCursor(this.elem, 'There\'s a <em id="e">man in<br></em>|the woods.')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          target = document.querySelector('#e').nextSibling
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(0)
+    })
+
+    it('should restore the selection (21).', function () {
+      placeCursor(this.elem, 'Two|<br><br>Three')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          target = this.elem.firstChild
+
+      expect(sel.isCollapsed).toBe(true)
+      expect(sel.anchorNode).toEqual(target)
+      expect(sel.anchorOffset).toEqual(3)
+    })
+
+    /**
+     * Non-collapsed selections.
+     */
+
+    it('should restore non-collapsed selections.', function () {
+      placeCursor(this.elem, '|<br>|<br>')
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          start = this.elem,
+          end = this.elem
+
+      expect(sel.isCollapsed).toBe(false)
+      expect(sel.anchorNode).toEqual(start)
+      expect(sel.anchorOffset).toEqual(0)
+      expect(sel.focusNode).toEqual(end)
+      expect(sel.focusOffset).toEqual(1)
+    })
+
+    it('should restore non-collapsed selections (2).', function () {
+      placeCursor(this.elem,
+        '<span></span><code id="c"><strong id="li">va|r</strong> x = <em>new</em> Choi|ce</code>', true)
+
+      this.Choose.restore(this.Choose.getSelection())
+
+      var sel = window.getSelection(),
+          end = document.querySelector('#li').firstChild,
+          start = document.querySelector('#c').lastChild
+
+      expect(sel.isCollapsed).toBe(false)
+      expect(sel.anchorNode).toEqual(start)
+      expect(sel.anchorOffset).toEqual(5)
+      expect(sel.focusNode).toEqual(end)
+      expect(sel.focusOffset).toEqual(2)
+    })
   })
 })
