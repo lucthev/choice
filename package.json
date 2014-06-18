@@ -1,13 +1,19 @@
 {
   "name": "choice",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A module for working with selections.",
-  "main": "dist/choice.min.js",
+  "main": "src/choice.js",
   "scripts": {
     "test": "npm run js && ./node_modules/.bin/grunt",
     "js": "./node_modules/.bin/gulp",
     "dev": "./node_modules/.bin/gulp watch"
   },
+  "keywords": [
+    "selection",
+    "contenteditable",
+    "text",
+    "editing"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/lucthev/choice"
