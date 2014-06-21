@@ -2,139 +2,97 @@
 
 'use strict';
 
-/**
- * selects a Range, optionally backwards.
- *
- * @param {Range} range
- * @param {Boolean} backwards
- */
-function selectRange (range, backwards) {
-  var sel = window.getSelection(),
-      endRange
-
-  sel.removeAllRanges()
-
-  if (typeof sel.extend === 'function') {
-    endRange = range.cloneRange()
-    endRange.collapse(!backwards)
-    sel.addRange(endRange)
-
-    if (backwards)
-      sel.extend(range.startContainer, range.startOffset)
-    else
-      sel.extend(range.endContainer, range.endOffset)
-  } else sel.addRange(range)
-}
-
-/**
- * placeCursor(elem, html) sets the innerHTML of elem to be html;
- * optionally places the cursor after '|'s.
- * Example:
- *   placeCursor(someElem, '<p>Mil|k & H|oney</p>')
- *
- * The innerHTML of someElem will be <p>Mil|k & H|oney</p>, and the
- * selection will be around 'k & H'. Optionally make the selection
- * right-to-left is backwars is truthy.
- *
- * @param {Element} elem
- * @param {String} html
- * @param {Boolean} backwards
- */
-function placeCursor (elem, html, backwards) {
-  var range = document.createRange(),
-      markers,
-      parent,
-      i
-
-  if (/\|/.test(html)) {
-    elem.focus()
-
-    elem.innerHTML = html.replace(/\|/g, '<span class="marker"></span>')
-
-    markers = elem.querySelectorAll('.marker')
-
-    range.setStartBefore(markers[0])
-
-    if (markers.length === 1)
-      range.setEndAfter(markers[0])
-    else
-      range.setEndAfter(markers[1])
-
-    for (i = 0; i < markers.length; i += 1) {
-      parent = markers[i].parentNode
-
-      parent.removeChild(markers[i])
-
-      parent.normalize()
-    }
-
-    selectRange(range, backwards)
-  } else elem.innerHTML = html
-}
-
 describe('Choice', function () {
+
+  var Selection = Choice.Selection
 
   describe('#getSelection (rich mode)', function () {
 
     beforeEach(function () {
-      this.elem = document.createElement('article')
+      var el = this.elem = document.createElement('article')
       this.elem.setAttribute('contenteditable', true)
 
       document.body.appendChild(this.elem)
 
-      this.Choice = new Choice(this.elem)
+      this.Choice = new Choice(this.elem, function () {
+        return flattenLists(el)
+      })
     })
 
     afterEach(function () {
       document.body.removeChild(this.elem)
     })
 
-    it('returns a tuple (two-element array) when the selection is collapsed.', function () {
+    it('should detect when the selection is collapsed.', function () {
       placeCursor(this.elem, '<p>Photo|graph</p>')
 
-      expect(this.Choice.getSelection()).toEqual([0, 5])
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 5]))
+      expect(sel.isCollapsed()).toBe(true)
     })
 
     it('collapsed selection (2).', function () {
       placeCursor(this.elem, '<p>|Things</p>')
 
-      expect(this.Choice.getSelection()).toEqual([0, 0])
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 0]))
+      expect(sel.isCollapsed()).toBe(true)
     })
 
     it('collapsed selection (3).', function () {
       placeCursor(this.elem, '<p>Things</p><h2>Words|</h2>')
 
-      expect(this.Choice.getSelection()).toEqual([1, 5])
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([1, 5]))
+      expect(sel.isCollapsed()).toBe(true)
     })
 
     it('collapsed selection (4).', function () {
       placeCursor(this.elem, '<p>One <span></span>two |three</p>')
 
-      expect(this.Choice.getSelection()).toEqual([0, 8])
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 8]))
+      expect(sel.isCollapsed()).toBe(true)
     })
 
     it('collapsed selection (5).', function () {
       placeCursor(this.elem, '<p>One <span></span>two |three</p>')
 
-      expect(this.Choice.getSelection()).toEqual([0, 8])
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 8]))
+      expect(sel.isCollapsed()).toBe(true)
     })
 
     it('collapsed selection (6).', function () {
       placeCursor(this.elem, '<h1>Title</h1><p>Once <strong>upon| a</strong> time')
 
-      expect(this.Choice.getSelection()).toEqual([1, 9])
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([1, 9]))
+      expect(sel.isCollapsed()).toBe(true)
     })
 
     it('should treat <br>s as newlines (collapsed selection).', function () {
       placeCursor(this.elem, '<p>Birds in<br>|the sky</p>')
 
-      expect(this.Choice.getSelection()).toEqual([0, 9])
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 9]))
+      expect(sel.isCollapsed()).toBe(true)
     })
 
     it('<br>s, collapsed selection (2).', function () {
       placeCursor(this.elem, '<p>Birds in|<br>the sky</p>')
 
-      expect(this.Choice.getSelection()).toEqual([0, 8])
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 8]))
+      expect(sel.isCollapsed()).toBe(true)
     })
 
     it('<br>s, collapsed selection (3).', function () {
@@ -143,17 +101,19 @@ describe('Choice', function () {
         '<h2>A subtitle</h2>' +
         '<p><em>Birds</em> in<br>the<span></span> sky|</p>')
 
-      expect(this.Choice.getSelection()).toEqual([2, 16])
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([2, 16]))
+      expect(sel.isCollapsed()).toBe(true)
     })
 
     it('should return the start and end points when selection is not collapsed.', function () {
       placeCursor(this.elem, '<p>|One</p><p>Two|</p>')
 
-      expect(this.Choice.getSelection())
-        .toEqual({
-          start: [0, 0],
-          end: [1, 3]
-        })
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 0], [1, 3]))
+      expect(sel.isCollapsed()).toBe(false)
     })
 
     it('not collapsed (2).', function () {
@@ -161,39 +121,35 @@ describe('Choice', function () {
       // Make the same selection, but backwards.
       placeCursor(this.elem, '<p>|One</p><p>Two|</p>', true)
 
-      expect(this.Choice.getSelection())
-        .toEqual({
-          end: [0, 0],
-          start: [1, 3]
-        })
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([1, 3], [0, 0]))
+      expect(sel.isCollapsed()).toBe(false)
     })
 
     it('not collapsed (3).', function () {
       placeCursor(this.elem, '<h2>A ti|tle</h2><p>Ho<br>|hum</p>', true)
 
-      expect(this.Choice.getSelection())
-        .toEqual({
-          start: [1, 3],
-          end: [0, 4]
-        })
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([1, 3], [0, 4]))
+      expect(sel.isCollapsed()).toBe(false)
     })
 
     it('not collapsed (4).', function () {
       placeCursor(this.elem, '<h1>Things</h1><p>Words|<br>|Stuff</p><p>More</p>')
 
-      expect(this.Choice.getSelection())
-        .toEqual({
-          start: [1, 5],
-          end: [1, 6]
-        })
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([1, 5], [1, 6]))
+      expect(sel.isCollapsed()).toBe(false)
 
       placeCursor(this.elem, '<h1>Things</h1><p>Words|<br>|Stuff</p><p>More</p>', true)
 
-      expect(this.Choice.getSelection())
-        .toEqual({
-          start: [1, 6],
-          end: [1, 5]
-        })
+      sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([1, 6], [1, 5]))
+      expect(sel.isCollapsed()).toBe(false)
     })
 
     xit('should account for edge cases.', function () {
@@ -213,48 +169,56 @@ describe('Choice', function () {
       // This kind of behaviour can occur in Firefox.
       placeCursor(this.elem, '|<p>One</p>')
 
-      expect(this.Choice.getSelection())
-        .toEqual([0, 0])
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 0]))
+      expect(sel.isCollapsed()).toBe(true)
 
       placeCursor(this.elem, '<p>One</p><p>Two</p>|')
 
-      expect(this.Choice.getSelection())
-        .toEqual([1, 3])
+      sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([1, 3]))
+      expect(sel.isCollapsed()).toBe(true)
     })
 
     it('edge cases (3).', function () {
       placeCursor(this.elem, '|<p>One</p><p>Two</p>|', true)
 
-      expect(this.Choice.getSelection())
-        .toEqual({
-          start: [1, 3],
-          end: [0, 0]
-        })
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([1, 3], [0, 0]))
+      expect(sel.isCollapsed()).toBe(false)
     })
 
     it('edge cases (4).', function () {
       placeCursor(this.elem, '<p>A <strong><em>b|</em></strong> c</p>')
 
-      expect(this.Choice.getSelection())
-        .toEqual([0, 3])
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 3]))
+      expect(sel.isCollapsed()).toBe(true)
 
       placeCursor(this.elem, '<p>A <strong><em>b</em>|</strong> c</p>')
 
-      expect(this.Choice.getSelection())
-        .toEqual([0, 3])
+      sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 3]))
+      expect(sel.isCollapsed()).toBe(true)
 
       placeCursor(this.elem, '<p>A <strong><em>b</em></strong>| c</p>')
 
-      expect(this.Choice.getSelection())
-        .toEqual([0, 3])
+      sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 3]))
+      expect(sel.isCollapsed()).toBe(true)
     })
 
     // Failing in Firefox
     it('should return false when the cursor is not in the selection.', function () {
       placeCursor(this.elem, '<p>Stuff</p>')
 
-      expect(this.Choice.getSelection())
-        .toBe(false)
+      expect(this.Choice.getSelection()).toBe(false)
     })
 
     it('return false (2).', function () {
@@ -268,8 +232,7 @@ describe('Choice', function () {
 
       expect(document.activeElement).toEqual(input)
 
-      expect(this.Choice.getSelection())
-        .toEqual(false)
+      expect(this.Choice.getSelection()).toBe(false)
 
       document.body.removeChild(input)
     })
@@ -286,8 +249,7 @@ describe('Choice', function () {
 
       expect(document.activeElement).toEqual(input)
 
-      expect(this.Choice.getSelection())
-        .toEqual(false)
+      expect(this.Choice.getSelection()).toBe(false)
 
       document.body.removeChild(input)
     })
@@ -295,27 +257,35 @@ describe('Choice', function () {
     it('should consider list items as blocks.', function () {
       placeCursor(this.elem, '<ul><li>One</li><li>|Two</li><li>Three</li></ul>')
 
-      expect(this.Choice.getSelection())
-        .toEqual([1, 0])
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([1, 0]))
+      expect(sel.isCollapsed()).toBe(true)
 
       placeCursor(this.elem, '<ul><li>One</li><li>Two|</li><li>Three</li></ul>')
 
-      expect(this.Choice.getSelection())
-        .toEqual([1, 3])
+      sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([1, 3]))
+      expect(sel.isCollapsed()).toBe(true)
     })
 
     it('should consider list items as blocks (2).', function () {
       placeCursor(this.elem, '<ul><li>One</li><li>Line 1<br>|<br></li><li>Three</li></ul>')
 
-      expect(this.Choice.getSelection())
-        .toEqual([1, 7])
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([1, 7]))
+      expect(sel.isCollapsed()).toBe(true)
     })
 
     it('should consider list items as blocks (3).', function () {
       placeCursor(this.elem, '<ol></ol><ul><li>One</li><li>Line 1<br>|<br></li><li>Three</li></ul>')
 
-      expect(this.Choice.getSelection())
-        .toEqual([1, 7])
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([1, 7]))
+      expect(sel.isCollapsed()).toBe(true)
     })
 
     it('should consider list items as blocks (4).', function () {
@@ -323,8 +293,10 @@ describe('Choice', function () {
         '<ol><li>Things</li></ol>' +
         '<ul><li>One</li><li>T|wo</li></ul>')
 
-      expect(this.Choice.getSelection())
-        .toEqual([2, 1])
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([2, 1]))
+      expect(sel.isCollapsed()).toBe(true)
     })
 
     it('should consider list items as blocks (5).', function () {
@@ -333,183 +305,200 @@ describe('Choice', function () {
         '<p>Random paragraph.</p>' +
         '<ul><li>One</li><li>Two</li></ul>|', true)
 
-      expect(this.Choice.getSelection())
-        .toEqual({
-          start: [3, 3],
-          end: [0, 0]
-        })
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([3, 3], [0, 0]))
+      expect(sel.isCollapsed()).toBe(false)
     })
   })
 
   describe('#getSelection (inline mode)', function () {
 
     beforeEach(function () {
-      this.elem = document.createElement('p')
+      var el = this.elem = document.createElement('p')
       this.elem.setAttribute('contenteditable', true)
 
       document.body.appendChild(this.elem)
 
       // Inline mode:
-      this.Choice = new Choice(this.elem, true)
+      this.Choice = new Choice(this.elem, function () {
+        return [el]
+      })
     })
 
     afterEach(function () {
       document.body.removeChild(this.elem)
     })
 
-    it('returns an integer when the selection is collapsed.', function () {
+    it('should work with collapsed selections.', function () {
       placeCursor(this.elem, 'One |two')
 
-      expect(this.Choice.getSelection())
-        .toEqual(4)
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 4]))
     })
 
     it('collapsed selection (2).', function () {
       placeCursor(this.elem, '|One two')
 
-      expect(this.Choice.getSelection())
-        .toEqual(0)
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 0]))
     })
 
     it('collapsed selection (3).', function () {
       placeCursor(this.elem, 'Dream within a dream|')
 
-      expect(this.Choice.getSelection())
-        .toEqual(20)
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 20]))
     })
 
     it('collapsed selection (4).', function () {
       placeCursor(this.elem, 'Black <em>o|ut</em> days')
 
-      expect(this.Choice.getSelection())
-        .toEqual(7)
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 7]))
     })
 
     it('collapsed selection (5).', function () {
       placeCursor(this.elem, 'Man<span></span>ea|ter')
 
-      expect(this.Choice.getSelection())
-        .toEqual(5)
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 5]))
 
       placeCursor(this.elem, 'Man<span></span>|eater')
 
-      expect(this.Choice.getSelection())
-        .toEqual(3)
+      sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 3]))
 
       placeCursor(this.elem, 'Man|<span></span>eater')
 
-      expect(this.Choice.getSelection())
-        .toEqual(3)
+      sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 3]))
     })
 
     it('should treat <br>s as newlines.', function () {
       placeCursor(this.elem, 'Black<br>water|')
 
-      expect(this.Choice.getSelection())
-        .toEqual(11)
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 11]))
     })
 
     it('<br> newlines (2).', function () {
       placeCursor(this.elem, 'Black<br>|water')
 
-      expect(this.Choice.getSelection())
-        .toEqual(6)
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 6]))
+      expect(sel.isCollapsed()).toBe(true)
 
       placeCursor(this.elem, 'Black|<br>water')
 
-      expect(this.Choice.getSelection())
-        .toEqual(5)
+      sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 5]))
+      expect(sel.isCollapsed()).toBe(true)
     })
 
     it('<br> newlines (3).', function () {
       placeCursor(this.elem, 'Black water|<br>')
 
-      expect(this.Choice.getSelection())
-        .toEqual(11)
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 11]))
+      expect(sel.isCollapsed()).toBe(true)
 
       // For some reason, two <br>s are required to make a newline.
       placeCursor(this.elem, 'Black water<br>|<br>')
 
-      expect(this.Choice.getSelection())
-        .toEqual(12)
+      sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 12]))
+      expect(sel.isCollapsed()).toBe(true)
     })
 
     it('<br> newlines (4).', function () {
       placeCursor(this.elem, '|<br>Black water')
 
-      expect(this.Choice.getSelection())
-        .toEqual(0)
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 0]))
+      expect(sel.isCollapsed()).toBe(true)
 
       placeCursor(this.elem, '<br>|Black water')
 
-      expect(this.Choice.getSelection())
-        .toEqual(1)
+      sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 1]))
+      expect(sel.isCollapsed()).toBe(true)
     })
 
     it('returns an object when the selection is not collapsed.', function () {
       placeCursor(this.elem, '|One|')
 
-      expect(this.Choice.getSelection())
-        .toEqual({
-          start: 0,
-          end: 3
-        })
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 0], [0, 3]))
+      expect(sel.isCollapsed()).toBe(false)
 
       placeCursor(this.elem, '|One|', true)
 
-      expect(this.Choice.getSelection())
-        .toEqual({
-          end: 0,
-          start: 3
-        })
+      sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 3], [0, 0]))
+      expect(sel.isCollapsed()).toBe(false)
     })
 
     it('not collapsed (2).', function () {
       placeCursor(this.elem, '<bold>|We</bold> Swa|rm')
 
-      expect(this.Choice.getSelection())
-        .toEqual({
-          start: 0,
-          end: 6
-        })
+      var sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 0], [0, 6]))
+      expect(sel.isCollapsed()).toBe(false)
 
       placeCursor(this.elem, '<bold>|We</bold> Swa|rm', true)
 
-      expect(this.Choice.getSelection())
-        .toEqual({
-          end: 0,
-          start: 6
-        })
+      sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 6], [0, 0]))
+      expect(sel.isCollapsed()).toBe(false)
     })
 
     it('not collapsed (3).', function () {
       placeCursor(this.elem, 'Mouthful |<em><b>of|</b></em> diamonds')
 
-      expect(this.Choice.getSelection())
-        .toEqual({
-          start: 9,
-          end: 11
-        })
+      var sel = this.Choice.getSelection()
 
-      placeCursor(this.elem, 'Mouthful <em>|<b>of</b></em>| diamonds')
+      expect(sel).toEqual(new Selection([0, 9], [0, 11]))
+      expect(sel.isCollapsed()).toBe(false)
 
-      expect(this.Choice.getSelection())
-        .toEqual({
-          start: 9,
-          end: 11
-        })
+      placeCursor(this.elem, 'Mouthful <em>|<b>of</b></em>| diamonds', true)
+
+      sel = this.Choice.getSelection()
+
+      expect(sel).toEqual(new Selection([0, 11], [0, 9]))
+      expect(sel.isCollapsed()).toBe(false)
     })
   })
 
   describe('#restore (rich mode)', function () {
 
     beforeEach(function () {
-      this.elem = document.createElement('article')
+      var el = this.elem = document.createElement('article')
       this.elem.setAttribute('contenteditable', true)
 
       document.body.appendChild(this.elem)
 
-      this.Choice = new Choice(this.elem)
+      this.Choice = new Choice(this.elem, function () {
+        return flattenLists(el)
+      })
     })
 
     afterEach(function () {
@@ -933,6 +922,8 @@ describe('Choice', function () {
     it('should consider list items as blocks (3).', function () {
       placeCursor(this.elem, '<ol></ol><ul><li>One</li><li id="li">Line 1<br>|<br></li><li>Three</li></ul>')
 
+      this.Choice.restore(this.Choice.getSelection())
+
       var sel = window.getSelection(),
           start = document.querySelector('#li')
 
@@ -987,7 +978,7 @@ describe('Choice', function () {
         '<li id="li">Will be a list item</li></ul>')
 
       // Because we've gotten rid of the the '1.'
-      s[1] -= 2
+      s.start[1] -= 2
 
       this.Choice.restore(s)
 
@@ -1003,13 +994,15 @@ describe('Choice', function () {
   describe('#restore (inline mode)', function () {
 
     beforeEach(function () {
-      this.elem = document.createElement('h2')
+      var el = this.elem = document.createElement('h2')
       this.elem.setAttribute('contenteditable', true)
 
       document.body.appendChild(this.elem)
 
       // Inline mode:
-      this.Choice = new Choice(this.elem, true)
+      this.Choice = new Choice(this.elem, function () {
+        return [el]
+      })
     })
 
     afterEach(function () {
@@ -1352,3 +1345,96 @@ describe('Choice', function () {
     })
   })
 })
+
+/**
+ * selects a Range, optionally backwards.
+ *
+ * @param {Range} range
+ * @param {Boolean} backwards
+ */
+function selectRange (range, backwards) {
+  var sel = window.getSelection(),
+      endRange
+
+  sel.removeAllRanges()
+
+  if (typeof sel.extend === 'function') {
+    endRange = range.cloneRange()
+    endRange.collapse(!backwards)
+    sel.addRange(endRange)
+
+    if (backwards)
+      sel.extend(range.startContainer, range.startOffset)
+    else
+      sel.extend(range.endContainer, range.endOffset)
+  } else sel.addRange(range)
+}
+
+/**
+ * placeCursor(elem, html) sets the innerHTML of elem to be html;
+ * optionally places the cursor after '|'s.
+ * Example:
+ *   placeCursor(someElem, '<p>Mil|k & H|oney</p>')
+ *
+ * The innerHTML of someElem will be <p>Mil|k & H|oney</p>, and the
+ * selection will be around 'k & H'. Optionally make the selection
+ * right-to-left if backwards is truthy.
+ *
+ * @param {Element} elem
+ * @param {String} html
+ * @param {Boolean} backwards
+ */
+function placeCursor (elem, html, backwards) {
+  var range = document.createRange(),
+      markers,
+      parent,
+      i
+
+  if (/\|/.test(html)) {
+    elem.focus()
+
+    elem.innerHTML = html.replace(/\|/g, '<span class="marker"></span>')
+
+    markers = elem.querySelectorAll('.marker')
+
+    range.setStartBefore(markers[0])
+
+    if (markers.length === 1)
+      range.setEndAfter(markers[0])
+    else
+      range.setEndAfter(markers[1])
+
+    for (i = 0; i < markers.length; i += 1) {
+      parent = markers[i].parentNode
+
+      parent.removeChild(markers[i])
+
+      parent.normalize()
+    }
+
+    selectRange(range, backwards)
+  } else elem.innerHTML = html
+}
+
+function flattenLists (elem) {
+  var children = Array.prototype.slice.call(elem.childNodes),
+        listItems,
+        child,
+        i
+
+  for (i = 0; i < children.length; i += 1) {
+    child = children[i]
+
+    if (/^[OU]L$/.test(child.nodeName)) {
+      listItems = Array.prototype.slice.call(child.childNodes)
+      listItems.unshift(i, 1)
+
+      i += listItems.length - 3
+
+      children.splice.apply(children, listItems)
+    }
+  }
+
+  return children
+}
+

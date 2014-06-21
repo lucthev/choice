@@ -49,11 +49,10 @@ function textBefore (root, node) {
  * @param {Boolean} inline
  * @return {Int || Array}
  */
-function encodePosition (root, node, offset, inline) {
-  var child,
-      children,
+function encodePosition (children, node, offset) {
+  var childIndex,
       textIndex,
-      childIndex
+      child
 
   while (node) {
     if (utils.isText(node) || node.nodeName === 'BR')
@@ -76,29 +75,18 @@ function encodePosition (root, node, offset, inline) {
     }
   }
 
-  // Get immediate child of root in which node is in.
-  if (!inline) {
+  child = node
+  while (child.parentNode && !utils.isBlock(child))
+    child = child.parentNode
 
-    // List items count.
-    children = utils.flattenLists(root)
-    child = node
+  childIndex = children.indexOf(child)
 
-    while (child.parentNode && child.parentNode !== root &&
-           !/[OU]L/.test(child.parentNode.nodeName)) {
-
-      child = child.parentNode
-    }
-
-    childIndex = children.indexOf(child)
-
-    // If the selection is not in the root's tree, do nothing.
-    if (childIndex < 0) return false
-
-  } else child = root
+  // If the selection is not in the root's tree, do nothing.
+  if (childIndex < 0) return false
 
   textIndex = textBefore(child, node) + offset
 
-  return inline ? textIndex : [childIndex, textIndex]
+  return [childIndex, textIndex]
 }
 
 module.exports = encodePosition

@@ -2,78 +2,89 @@
 
 var encodePosition = require('./encode'),
     decodePosition = require('./decode'),
+    Selection = require('./selection'),
     utils = require('./utils')
 
 /**
  * Choice is a module for unobtrusively saving and restoring selections
- * in an element (e.g. a contenteditable editor).
+ * in a contenteditable element.
  *
- * @param {Element} elem
- * @param {Boolean} inline
+ * @param {Element} rootElem
+ * @param {Function} getChildren
  */
-function Choice (elem, inline) {
+function Choice (rootElem, getChildren) {
   if (!(this instanceof Choice))
-    return new Choice(elem, inline)
+    return new Choice(rootElem, getChildren)
 
-  // Because of some Firefox bugs, Choice doesn't work with just any
-  // element.
-  if (!elem.contentEditable)
+  // Because of some Firefox bugs.
+  if (!rootElem.contentEditable)
     throw new Error('Choice requires a contentEditable element.')
 
-  this.elem = elem
-  this.inline = !!inline
+  if (!getChildren)
+    getChildren = function () {
+      return utils.toArray(rootElem)
+    }
+
+  this.elem = rootElem
+  this._getChildren = getChildren
 }
 
+/**
+ * getSelection() returns an instance of Choice.Selection with
+ * information about the start and end points of the selection.
+ *
+ * @return {Choice.Selection}
+ */
 Choice.prototype.getSelection = function () {
   var sel = window.getSelection(),
-      pos
+      children,
+      start,
+      end
 
   if (!sel.rangeCount || document.activeElement !== this.elem)
     return false
 
+  children = this._getChildren()
+
+  start = encodePosition(children, sel.anchorNode, sel.anchorOffset)
+
   if (sel.isCollapsed)
-    return encodePosition(this.elem, sel.anchorNode, sel.anchorOffset, this.inline)
+    end = start
+  else if (start)
+    end = encodePosition(children, sel.focusNode, sel.focusOffset)
 
-  pos = {
-    start: encodePosition(this.elem, sel.anchorNode, sel.anchorOffset, this.inline),
-    end: encodePosition(this.elem, sel.focusNode, sel.focusOffset, this.inline)
-  }
-
-  // We can't simply do !pos.start, because the start/end can be 0.
-  if (pos.start === false || pos.end === false)
+  if (!start || !end)
     return false
 
-  return pos
+  return new Selection(start, end)
 }
 
+/**
+ * restore(selection) restores a selection from an instance of
+ * Choice.Selection.
+ *
+ * @param {Choice.Selection} selection
+ */
 Choice.prototype.restore = function (selection) {
   var errorMsg = 'Invalid selection type provided to Choice#restore',
       sel = window.getSelection(),
       range = document.createRange(),
+      children,
       start,
       end
 
   if (!selection && selection !== 0)
     throw new Error(errorMsg)
 
-  if (this.inline && utils.isNum(selection)) {
-    start = decodePosition(this.elem, selection)
-  } else if (this.inline && utils.isNum(selection.start, selection.end)) {
-    start = decodePosition(this.elem, selection.start)
-    end = decodePosition(this.elem, selection.end)
-  } else if (!this.inline && utils.isArray(selection)) {
-    start = decodePosition(utils.listIndex(this.elem, selection[0]), selection[1])
-  } else if (!this.inline && utils.isArray(selection.start, selection.end)) {
-    start = decodePosition(
-      utils.listIndex(this.elem, selection.start[0]),
-      selection.start[1]
-    )
-    end = decodePosition(
-      utils.listIndex(this.elem, selection.end[0]),
-      selection.end[1]
-    )
-  } else
-    throw new Error(errorMsg)
+  children = this._getChildren()
+
+  if (selection.isCollapsed()) {
+    start = decodePosition(children[selection.end[0]], selection.end[1])
+
+  } else {
+    start = decodePosition(children[selection.start[0]], selection.start[1])
+    end = decodePosition(children[selection.end[0]], selection.end[1])
+  }
 
   this.elem.focus()
 
@@ -99,5 +110,8 @@ Choice.support = function () {
 
   return document.createRange && typeof sel.extend === 'function'
 }
+
+// Provide the Selection constructor.
+Choice.Selection = Selection
 
 module.exports = Choice
