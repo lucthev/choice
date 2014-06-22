@@ -1,6 +1,6 @@
 # Choice
 
-A module for working with selections in `contenteditable` elements.
+A module for unobtrusively saving and restoring selections in `contenteditable` elements.
 
 ## Installation
 
@@ -8,47 +8,86 @@ A module for working with selections in `contenteditable` elements.
 $ npm install choice
 ```
 
-## API
+## How it works
 
-__Note__: Choice, unfortunately, only works in browsers that implement the native [`Selection#extend`](https://developer.mozilla.org/en-US/docs/Web/API/Selection.extend) method. Essentially, that’s all browsers except IE (yes, ALL versions of IE). With that in mind:
-
-### var supported = Choice.support( )
-
-Returns true if all the APIs Choice needs to work correctly exist; false otherwise.
-
-### var selection = new Choice( element [, inline ] )
-
-Creates an instance of Choice. The `new` constructor is optional. `element` is the root `contenteditable` element in which you want to work with selections. `inline` is an optional boolean value that specifies that the contents of `element` will only be inline elements. Defaults to false. For example:
+Consider the layout of a simple rich text editor; there is a document which contains blocks of text (paragraphs, headings, etc.), and, in these blocks, text with various styles (bold, italic, etc.). In HTML, this might look like:
 
 ```html
-<!-- You would want inline: false -->
+<!-- The article represent the editor "document" -->
 <article contenteditable="true">
-  <p>Another block element.</p>
-</article>
 
-<!-- inline: true would be appropriate -->
-<h1 contenteditable="true">
-    Only <b>inline</b> things in here.
-</h1>
+    <!-- These are the blocks of text -->
+    <p>Some <strong>rich</strong> text.</p>
+    <h2>This is a heading</h2>
+    <p><em>More</em> text. Ladida.</p>
+</article>
 ```
+
+Choice represents the endpoints of a selection as an integer pair `[childIndex, textIndex]`, where `childIndex` is the index of the block which contains the endpoint relative to the “document”, and `textIndex` is the number of characters in the block before the endpoint. For example, if the spanned the word “This” in the example above, the selection would be represented as:
+
+```js
+{
+    start: [0, 0],
+    end: [0, 4]
+}
+```
+
+## API
+
+### var selection = new Choice( element [, getChildren ] )
+
+Creates an instance of Choice. The `new` constructor is optional. `element` is the root `contenteditable` element that represent the “document” of the editor.
+
+Although working with child indices may work for simple use cases, like the example above, the shortcomings of that method quickly become evident when your editor produces more complex markup. Consider:
+
+```html
+<article contenteditable="true">
+    <section>
+        <p>Some <strong>rich</strong> text.</p>
+        <p>I can edit it.</p>
+    </section>
+    <section>
+        <hr contenteditable="false">
+        <h2>This is a new section</h2>
+        <p>More text. Ladida.</p>
+    </section>
+</article>
+```
+
+In this case, using child indices wouldn’t work; the “blocks” of text aren’t direct children of the “document”. For these situations, Choice takes a second paramater, `getChildren`, a function that return an array containing the relevant “blocks” of text. For the above example, `getChildren` might look like:
+
+```js
+function getChildren() {
+    var article = document.querySelector('article'),
+        children = article.querySelectorAll('p, h2')
+
+    return Array.prototype.slice.call(children)
+}
+```
+
+If a `getChildren` function is not given, Choice defaults to using the root element’s child nodes.
 
 ### selection.getSelection( )
 
-Returns an object representing the user’s selection.
+Returns an an instance of `Choice.Selection`. This has two properties, `start` and `end`, which contain the two integer pairs representing the start and end points of the selection. `Choice.Selection` has one instance method, `isCollapsed`, which returns true if the start and end points are the same; false otherwise.
 
 ### selection.restore( savedSelection )
 
-Restores a selection from a previously saved selection.
+Sets the user’s selection to match that represented by the given instance of `Choice.Selection`.
+
+### Choice.support()
+
+This method returns true if the APIs Choice relies on exist. See [Browser support](#browser-support) below.
 
 ## Motivation
 
-Choice's main purpose is to unobtrusively save and restore the selection in `contenteditable` regions. This can help “standardize” certain behaviours when working with the contenteditable API. Consider the following markup; it’s faily typical in, for example, rich text editing.
+Choice's main purpose is to unobtrusively save and restore the selection in `contenteditable` regions. This can help “standardize” certain behaviours when working with the contenteditable API. Consider the following markup; it’s faily typical in rich text editing.
 
 ```html
 <p>Some <b><i>fancy</i></b> text</p>
 ```
 
-Note that when the caret is placed at the end of ‘fancy’, there are actually three ways it can be placed:
+Note that when the caret is placed at the end of ‘fancy’, there are actually three ways it can be placed (`|` represent the caret):
 
 ```html
 <p>Some <b><i>fancy</i></b>| text</p>
@@ -58,7 +97,7 @@ Note that when the caret is placed at the end of ‘fancy’, there are actually
 <p>Some <b><i>fancy|</i></b> text</p>
 ```
 
-You’ll often have no control over which of these situations occur, which can lead to very inconsistent behaviour; when a user’s cursor is at the end of ‘fancy’, will text they enter be bold, italic and bold, or plain?
+You’ll often have no control over which of these situations occur, which can lead to very inconsistent behaviour; when the caret is at the end of ‘fancy’, will text a user enters be bold, italic and bold, or plain?
 
 Saving and restoring the selection with Choice, however, normalizes this behaviour. In general, a restored selection tries to “lean left.” A couple examples:
 
@@ -87,23 +126,20 @@ A more interesting use case, perhaps, is to manipulate elements without losing a
 </article>
 ```
 
-Naively swapping the paragraph for a heading would (probably, depending on the browser) lose the position of the caret. To fix this situation, save the selection using `Choice#getSelection`, swap out the paragraph, and restore the selection using `Choice#restore`.
+Naively swapping the paragraph for a heading would (probably, depending on the browser) lose the selection. To turn the paragraph into a heading without losing the selection, save the selection using `Choice#getSelection`, swap out the paragraph, and restore the selection using `Choice#restore`.
 
 ## Caveats
 
-There are some restriction to saving and restoring the selection. A saved selection in Choice usually looks like `[ childIndex, textIndex ]`, where `childIndex` is a the index of the immediate child of the root element in which the selection is in, and `textIndex` is the length of the text before the selection. In the example above, the selection would (assuming the selection is left-to-right) be saved as:
+There are some restriction to saving and restoring the selection. Anything that would mess up the integer pairs representing the endpoints of the selection will result in a poorly restored selection. This includes, but may not be limited to, inserting/removing “blocks” or inserting/removing text. If you plan on doing those things, you should update the saved selection manually to account for your changes.
 
-```js
-{
-    start: [ 0, 15 ],
-    end: [ 0, 19 ]
-}
-```
+Additionally, Firefox, for whatever reason, allows multiple selections in `contenteditable` regions. Choice has inconsistent behaviour when there are multiple selection regions. My advice? It’s not worth fussing over.
 
-With that in mind, anything that would mess up those numbers will result in a poorly restored selection. This includes, but may not be limited to, inserting/removing block-level elements or inserting/removing text. If you plan on doing those things, you should update the saved selection manually to account for your changes.
+## Browser support
 
-Additionally, Firefox, for whatever reason, allows multiple selections in `contenteditable` regions. Choice will produce inconsistent behaviour when there are multiple selection regions. My advice? It’s not worth fussing over.
+Unfortunately, Choice only works in browsers that implement the native [`Selection#extend`][extend] method. Essentially, that’s all browsers except Internet Explorer (yes, ALL versions).
 
 ## License
 
 MIT.
+
+[extend]: https://developer.mozilla.org/en-US/docs/Web/API/Selection.extend
