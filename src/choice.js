@@ -22,7 +22,7 @@ function Choice (rootElem, getChildren) {
 
   if (!getChildren)
     getChildren = function () {
-      return utils.toArray(rootElem)
+      return utils.toArray(rootElem.childNodes)
     }
 
   this.elem = rootElem
