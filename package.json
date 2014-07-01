@@ -1,7 +1,7 @@
 {
   "name": "choice",
-  "version": "0.1.0",
-  "description": "A module for working with selections.",
+  "version": "0.1.1",
+  "description": "A module for working with selections in contenteditable areas.",
   "main": "src/choice.js",
   "scripts": {
     "test": "npm run js && ./node_modules/.bin/grunt",
@@ -11,6 +11,8 @@
   "keywords": [
     "selection",
     "contenteditable",
+    "save",
+    "restore",
     "text",
     "editing"
   ],

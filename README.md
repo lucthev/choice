@@ -121,7 +121,7 @@ A more interesting use case, perhaps, is to manipulate elements without losing a
 
 ```html
 <article contenteditable="true">
-    <p>I want to make |this| a heading.</p>
+    <p>I want to make |this block| a heading.</p>
     <p>This stuff is not as important.</p>
 </article>
 ```
