@@ -23,12 +23,12 @@ Consider the layout of a simple rich text editor; there is a document which cont
 </article>
 ```
 
-Choice represents the endpoints of a selection as an integer pair `[childIndex, textIndex]`, where `childIndex` is the index of the block which contains the endpoint relative to the “document”, and `textIndex` is the number of characters in the block before the endpoint. If the selection spanned the word “This” in the example above, the selection would be represented as:
+Choice represents the endpoints of a selection as an integer pair `[childIndex, textIndex]`, where `childIndex` is the index, relative to the “document”, of the block which contains the endpoint, and `textIndex` is the number of characters in the block before the endpoint. If the selection spanned the word “This” in the example above, the selection would be represented as:
 
 ```js
 {
-    start: [0, 0],
-    end: [0, 4]
+    start: [1, 0],
+    end: [1, 4]
 }
 ```
 
