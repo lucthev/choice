@@ -3,6 +3,29 @@
 var utils = require('./utils')
 
 /**
+ * isLastChild(root, node) determines if the Node node is the last
+ * child of root. Not in the Node.lastChild sense; rather, if 'node'
+ * was the <br>, and 'root' the <p> in the following markup:
+ *   <p>Some <em>stuff<br></em></p>
+ * isLastChild(root, node) would be true.
+ *
+ * @param {Element} root
+ * @param {Node} node
+ * @return {Boolean}
+ */
+function isLastChild (root, node) {
+
+  while (node && node !== root) {
+    if (node.nextSibling)
+      return false
+
+    node = node.parentNode
+  }
+
+  return true
+}
+
+/**
  * textBefore(root, node) gets the length of the text before the
  * given node relative to the element 'root'.
  *
@@ -39,18 +62,18 @@ function textBefore (root, node) {
 }
 
 /**
- * encodePosition(root, node, offset, inline) encodes the position
- * of the selection within root, based on the current node and
- * offset. If inline is truthy, encodes it a little differently.
+ * encodePosition(children, node, offset) encodes the position
+ * of the selection, based on the current node and offset. Returns
+ * an integer pair.
  *
- * @param {Element} root
+ * @param {Array[Element]} children
  * @param {Node} node
  * @param {Int} offset
- * @param {Boolean} inline
- * @return {Int || Array}
+ * @return {Array}
  */
 function encodePosition (children, node, offset) {
-  var childIndex,
+  var lastBR = false,
+      childIndex,
       textIndex,
       child
 
@@ -68,9 +91,10 @@ function encodePosition (children, node, offset) {
 
       if (utils.isText(node))
         offset = node.data.length
-      else if (node.nodeName === 'BR')
+      else if (node.nodeName === 'BR') {
         offset = 1
-      else
+        lastBR = true
+      } else
         offset = node.childNodes.length
     }
   }
@@ -83,6 +107,10 @@ function encodePosition (children, node, offset) {
 
   // If the selection is not in the root's tree, do nothing.
   if (childIndex < 0) return false
+
+  // See https://github.com/lucthev/choice/issues/1
+  if (lastBR && isLastChild(child, node))
+    offset -= 1
 
   textIndex = textBefore(child, node) + offset
 

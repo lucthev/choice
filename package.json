@@ -1,6 +1,6 @@
 {
   "name": "choice",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A module for working with selections in contenteditable areas.",
   "main": "src/choice.js",
   "scripts": {
