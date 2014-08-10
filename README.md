@@ -69,7 +69,11 @@ If a `getChildren` function is not given, Choice defaults to using the root elem
 
 ### selection.getSelection( )
 
-Returns an an instance of `Choice.Selection`. This has two properties, `start` and `end`, which contain the two integer pairs representing the start and end points of the selection. `Choice.Selection` has one instance method, `isCollapsed`, which returns true if the start and end points are the same; false otherwise.
+Returns an an instance of `Choice.Selection`. This has two properties, `start` and `end`, which contain the two integer pairs representing the start and end points of the selection. `Choice.Selection` has two instance methods:
+
+`isCollapsed` returns true if the start and end points are the same; false otherwise.
+
+`isBackwards` returns true if the selections represend a backwards selection; false otherwise.
 
 If the user’s selection is not contained within the root element, `getSelection` returns `false`.
 

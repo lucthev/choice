@@ -9,7 +9,7 @@ function Selection (start, end) {
 }
 
 /**
- * isCollapsed determines if the Selection represents a collapsed
+ * isCollapsed() determines if the Selection represents a collapsed
  * selection.
  *
  * @return {Boolean}
@@ -18,6 +18,12 @@ Selection.prototype.isCollapsed = function () {
   return this.start[0] === this.end[0] && this.start[1] === this.end[1]
 }
 
+/**
+ * isBackwards() determines if the Selection represents a backwards
+ * selection.
+ *
+ * @return {Boolean}
+ */
 Selection.prototype.isBackwards = function () {
   return this.start[0] > this.end[0] ||
     (this.start[0] === this.end[0] && this.start[1] > this.end[1])
