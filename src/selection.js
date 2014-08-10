@@ -18,4 +18,9 @@ Selection.prototype.isCollapsed = function () {
   return this.start[0] === this.end[0] && this.start[1] === this.end[1]
 }
 
+Selection.prototype.isBackwards = function () {
+  return this.start[0] > this.end[0] ||
+    (this.start[0] === this.end[0] && this.start[1] > this.end[1])
+}
+
 module.exports = Selection
