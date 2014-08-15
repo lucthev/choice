@@ -78,9 +78,11 @@ function encodePosition (children, node, offset) {
       child
 
   while (node) {
-    if (utils.isText(node) || node.nodeName === 'BR')
+    if (utils.isText(node) || node.nodeName === 'BR') {
       break
-    else if (offset < node.childNodes.length) {
+    } else if (!node.isContentEditable) {
+      node = node.nextSibling
+    } else if (offset < node.childNodes.length) {
       node = node.childNodes[offset]
       offset = 0
     } else if (!node.childNodes.length) {

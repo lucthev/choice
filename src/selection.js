@@ -29,4 +29,20 @@ Selection.prototype.isBackwards = function () {
     (this.start[0] === this.end[0] && this.start[1] > this.end[1])
 }
 
+/**
+ * equals(other) determines if two selections are equivalent.
+ *
+ * @param {Selection} other
+ * @return {Boolean}
+ */
+Selection.prototype.equals = function (other) {
+  if (!(other instanceof Selection))
+    return false
+
+  return this.start[0] === other.start[0] &&
+         this.start[1] === other.start[1] &&
+         this.end[0] === other.end[0] &&
+         this.end[1] === other.end[1]
+}
+
 module.exports = Selection
