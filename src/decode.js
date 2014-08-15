@@ -69,7 +69,7 @@ function decodePosition (root, offset) {
   }
 
   // We shouldn't reach here, in theory.
-  throw new Error('Invalid offset or root node.')
+  throw new Error('Invalid selection indices.')
 }
 
 module.exports = decodePosition

@@ -18,7 +18,7 @@ function Choice (rootElem, getChildren) {
 
   // Because of some Firefox bugs.
   if (!rootElem.contentEditable)
-    throw new Error('Choice requires a contentEditable element.')
+    throw new TypeError('Choice requires a contentEditable element.')
 
   if (!getChildren)
     getChildren = function () {
@@ -66,21 +66,19 @@ Choice.prototype.getSelection = function () {
  * @param {Choice.Selection} selection
  */
 Choice.prototype.restore = function (selection) {
-  var errorMsg = 'Invalid selection type provided to Choice#restore',
-      sel = window.getSelection(),
+  var sel = window.getSelection(),
       range = document.createRange(),
       children,
       start,
       end
 
-  if (!selection && selection !== 0)
-    throw new Error(errorMsg)
+  if (!(selection instanceof Selection))
+    throw new TypeError('"' + selection + '" is not a valid selection.')
 
   children = this._getChildren()
 
   if (selection.isCollapsed()) {
     start = decodePosition(children[selection.end[0]], selection.end[1])
-
   } else {
     start = decodePosition(children[selection.start[0]], selection.start[1])
     end = decodePosition(children[selection.end[0]], selection.end[1])
@@ -94,9 +92,8 @@ Choice.prototype.restore = function (selection) {
   sel.removeAllRanges()
   sel.addRange(range)
 
-  if (end) {
+  if (end)
     sel.extend(end.node, end.offset)
-  }
 }
 
 /**
