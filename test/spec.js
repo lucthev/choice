@@ -862,6 +862,33 @@ describe('Choice', function () {
       expect(sel.anchorOffset).toEqual(0)
     })
   })
+
+  describe('Choice.Selection should', function () {
+    var Selection = Choice.Selection
+
+    it('not use the same array for a collapsed selection', function () {
+      var sel = new Selection([1, 3])
+
+      expect(sel.end).toEqual([1, 3])
+
+      sel.start[0] += 1
+
+      expect(sel.end).toEqual([1, 3])
+    })
+
+    it('return a new selection when calling #clone', function () {
+      var sel = new Selection([1, 1], [2, 2]),
+          clone = sel.clone()
+
+      expect(sel === clone).toBe(false)
+
+      sel.start[0] += 1
+      expect(clone.start).toEqual([1, 1])
+
+      sel.end = [5, 5]
+      expect(clone.end).toEqual([2, 2])
+    })
+  })
 })
 
 /**

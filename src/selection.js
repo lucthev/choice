@@ -2,10 +2,17 @@
 
 /**
  * Selection(start [, end]) holds information about a selection.
+ *
+ * @param {Array} start
+ * @param {Array} end
+ * @return {Selection}
  */
 function Selection (start, end) {
+  if (!(this instanceof Selection))
+    return new Selection(start, end)
+
   this.start = start
-  this.end = end || start
+  this.end = end || start.slice()
 }
 
 /**
@@ -43,6 +50,15 @@ Selection.prototype.equals = function (other) {
          this.start[1] === other.start[1] &&
          this.end[0] === other.end[0] &&
          this.end[1] === other.end[1]
+}
+
+/**
+ * clone() returns a Selection identical to that it was called on.
+ *
+ * @return {Selection}
+ */
+Selection.prototype.clone = function () {
+  return new Selection(this.start.slice(), this.end.slice())
 }
 
 module.exports = Selection
