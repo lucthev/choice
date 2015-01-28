@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.0
+
+- Added the static function `Selection.equals()`.
+
 ## 1.2.0
 
 - When there is no selection, `Choice#getSelection` now returns `null` (it previously returned `false`). You may have to update your code if you’ve been explicitly comparing against `false`.
