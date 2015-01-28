@@ -1,5 +1,12 @@
 'use strict';
 
+var blocks = require('block-elements').map(function (block) {
+  return block.toUpperCase()
+})
+
+if (blocks.indexOf('LI') < 0)
+  blocks.push('LI')
+
 exports.toArray = function (val) {
   return Array.prototype.slice.call(val)
 }
@@ -12,10 +19,7 @@ var isElem = exports.isElem = function (node) {
   return node && node.nodeType === Node.ELEMENT_NODE
 }
 
-// NOTE: these represent 'visual' blocks, not necessarily block elements.
-var blocks = ['address', 'aside', 'blockquote', 'figure', 'figcaption',
-      'footer', 'h[1-6]', 'header', 'li', 'p', 'pre'],
-    blockRegex = new RegExp('^(' + blocks.join('|') + ')$', 'i')
+var blockRegex = new RegExp('^(' + blocks.join('|') + ')$')
 
 /**
  * isBlock(elem) determines if an element is a visual block according
