@@ -61,4 +61,20 @@ Selection.prototype.clone = function () {
   return new Selection(this.start.slice(), this.end.slice())
 }
 
+/**
+ * Selection.equals(first, second) is a static method similar to the
+ * Selection#equals method, but it can be used to determine the equality
+ * of two null selections.
+ *
+ * @param {Selection} first
+ * @param {Selection} second
+ * @return {Boolean}
+ */
+Selection.equals = function (first, second) {
+  if (!first || !second)
+    return first === null && second === null
+
+  return first instanceof Selection && first.equals(second)
+}
+
 module.exports = Selection

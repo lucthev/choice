@@ -888,6 +888,24 @@ describe('Choice', function () {
       sel.end = [5, 5]
       expect(clone.end).toEqual([2, 2])
     })
+
+    it('compare two selections', function () {
+      var sel = new Selection([1, 1]),
+          other = new Selection([1, 1], [2, 2])
+
+      expect(Selection.equals(null, null)).toBe(true)
+      expect(Selection.equals(sel, sel)).toBe(true)
+      expect(Selection.equals(sel, sel.clone())).toBe(true)
+      expect(Selection.equals(sel, other)).toBe(false)
+
+      // Things that can’t be Selections should be false.
+      expect(Selection.equals(true, true)).toBe(false)
+
+      expect(sel.equals(null)).toBe(false)
+      expect(sel.equals(other)).toBe(false)
+      expect(sel.equals(sel)).toBe(true)
+      expect(sel.equals(sel.clone())).toBe(true)
+    })
   })
 })
 
