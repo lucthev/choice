@@ -34,7 +34,7 @@ Choice represents the endpoints of a selection as an integer pair `[childIndex, 
 
 ## API
 
-### var selection = new Choice( element [, getChildren ] )
+### new Choice( element [, getChildren ] )
 
 Creates an instance of Choice. The `new` constructor is optional. `element` is the root `contenteditable` element that represent the “document” of the editor.
 
@@ -67,23 +67,43 @@ function getChildren() {
 
 If a `getChildren` function is not given, Choice defaults to using the root element’s child nodes.
 
-### selection.getSelection( )
+### Choice#getSelection( )
 
-Returns an an instance of `Choice.Selection`. This has two properties, `start` and `end`, which contain the two integer pairs representing the start and end points of the selection. `Choice.Selection` has two instance methods:
-
-`isCollapsed` returns true if the start and end points are the same; false otherwise.
-
-`isBackwards` returns true if the selections represend a backwards selection; false otherwise.
+Returns an an instance of `Choice.Selection`. This has two properties, `start` and `end`, which contain the two integer pairs representing the start and end points of the selection. See below for more information on `Choice.Selection`.
 
 If the user’s selection is not contained within the root element, `getSelection` returns `null`.
 
-### selection.restore( savedSelection )
+### Choice#restore( savedSelection )
 
 Sets the user’s selection to match that represented by the given instance of `Choice.Selection`.
 
-### Choice.support()
+### Choice.support( )
 
 This method returns true if the APIs Choice relies on exist. See [Browser support](#browser-support) below.
+
+### Selection
+
+`getSelection` returns an instance of `Choice.Selection`. This class has several instance and static methods:
+
+#### Selection#isCollapsed( )
+
+Returns a boolean indicating whether the endpoints of the selection are identical.
+
+#### Selection#isBackwards( )
+
+Returns a boolean indicating whether the selection represents a right-to-left selection.
+
+#### Selection#clone( )
+
+Returns a new selection identical to the selection this method was called on.
+
+#### Selection.equals( other )
+
+Returns a boolean indicating whether or not `other` and the selection this method was called on represent the same selection.
+
+#### Selection.equals( first, second )
+
+This static method is similar to `Selection#equals`, but can be used to determine the equality of two `null` selections.
 
 ## Motivation
 
