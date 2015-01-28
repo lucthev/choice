@@ -257,13 +257,13 @@ describe('Choice', function () {
       expect(sel.isBackwards()).toBe(false)
     })
 
-    it('should return false when the cursor is not in the selection.', function () {
+    it('should return null when the cursor is not in the selection.', function () {
       placeCursor(this.elem, '<p>Stuff</p>')
 
-      expect(this.Choice.getSelection()).toBe(false)
+      expect(this.Choice.getSelection()).toBe(null)
     })
 
-    it('return false (2).', function () {
+    it('return null (2).', function () {
       placeCursor(this.elem, '<p>Things</p>')
 
       var input = document.createElement('input')
@@ -274,12 +274,12 @@ describe('Choice', function () {
 
       expect(document.activeElement).toEqual(input)
 
-      expect(this.Choice.getSelection()).toBe(false)
+      expect(this.Choice.getSelection()).toBe(null)
 
       document.body.removeChild(input)
     })
 
-    it('return false (3).', function () {
+    it('return null (3).', function () {
       placeCursor(this.elem, '<p>Things</p>')
 
       var input = document.createElement('div')
@@ -291,7 +291,7 @@ describe('Choice', function () {
 
       expect(document.activeElement).toEqual(input)
 
-      expect(this.Choice.getSelection()).toBe(false)
+      expect(this.Choice.getSelection()).toBe(null)
 
       document.body.removeChild(input)
     })

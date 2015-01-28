@@ -75,7 +75,7 @@ Returns an an instance of `Choice.Selection`. This has two properties, `start` a
 
 `isBackwards` returns true if the selections represend a backwards selection; false otherwise.
 
-If the user’s selection is not contained within the root element, `getSelection` returns `false`.
+If the user’s selection is not contained within the root element, `getSelection` returns `null`.
 
 ### selection.restore( savedSelection )
 

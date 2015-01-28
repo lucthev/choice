@@ -8,6 +8,7 @@
   "devel": true,
   "globalstrict": true,
   "validthis": true,
+  "newcap": false,
   "globals": {
     "module": false,
     "exports": false,

@@ -20,10 +20,11 @@ function Choice (rootElem, getChildren) {
   if (!rootElem.contentEditable)
     throw new TypeError('Choice requires a contentEditable element.')
 
-  if (!getChildren)
+  if (!getChildren) {
     getChildren = function () {
       return utils.toArray(rootElem.childNodes)
     }
+  }
 
   this.elem = rootElem
   this._getChildren = getChildren
@@ -42,7 +43,7 @@ Choice.prototype.getSelection = function () {
       end
 
   if (!sel.rangeCount || document.activeElement !== this.elem)
-    return false
+    return null
 
   children = this._getChildren()
 
@@ -54,7 +55,7 @@ Choice.prototype.getSelection = function () {
     end = encodePosition(children, sel.focusNode, sel.focusOffset)
 
   if (!start || !end)
-    return false
+    return null
 
   return new Selection(start, end)
 }
@@ -73,7 +74,7 @@ Choice.prototype.restore = function (selection) {
       end
 
   if (!(selection instanceof Selection))
-    throw new TypeError('"' + selection + '" is not a valid selection.')
+    throw TypeError('"' + selection + '" is not a valid selection.')
 
   children = this._getChildren()
 
