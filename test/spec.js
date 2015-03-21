@@ -944,16 +944,12 @@ function selectRange (range, backwards) {
 function placeCursor (elem, html, backwards) {
   var range = document.createRange()
   var markers
-  var parent
-  var i
 
   if (/\|/.test(html)) {
     elem.focus()
-
     elem.innerHTML = html.replace(/\|/g, '<span class="marker"></span>')
 
     markers = elem.querySelectorAll('.marker')
-
     range.setStartBefore(markers[0])
 
     if (markers.length === 1) {
@@ -962,36 +958,25 @@ function placeCursor (elem, html, backwards) {
       range.setEndAfter(markers[1])
     }
 
-    for (i = 0; i < markers.length; i += 1) {
-      parent = markers[i].parentNode
-
-      parent.removeChild(markers[i])
-
+    ;[].forEach.call(markers, function (marker) {
+      var parent = marker.parentNode
+      parent.removeChild(marker)
       parent.normalize()
-    }
+    })
 
     selectRange(range, backwards)
-  } else elem.innerHTML = html
+  } else {
+    elem.innerHTML = html
+  }
 }
 
 function flattenLists (elem) {
-  var children = [].slice.call(elem.childNodes)
-  var listItems
-  var child
-  var i
-
-  for (i = 0; i < children.length; i += 1) {
-    child = children[i]
-
-    if (/^[OU]L$/.test(child.nodeName)) {
-      listItems = [].slice.call(child.childNodes)
-      listItems.unshift(i, 1)
-
-      i += listItems.length - 3
-
-      children.splice.apply(children, listItems)
+  return [].reduce.call(elem.childNodes, function (acc, item) {
+    if (/^[OU]L$/.test(item.nodeName)) {
+      return acc.concat([].slice.call(item.childNodes))
     }
-  }
 
-  return children
+    acc.push(item)
+    return acc
+  }, [])
 }
