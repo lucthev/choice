@@ -1,5 +1,4 @@
-/* jshint node:true */
-'use strict';
+'use strict'
 
 module.exports = function (config) {
   var browser = process.env.BROWSER

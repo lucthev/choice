@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 var utils = require('./utils')
 
@@ -15,15 +15,13 @@ var utils = require('./utils')
  * }
  */
 function decodePosition (root, offset) {
-  var node = root.firstChild,
-      depth = 0,
-      children,
-      parent
+  var node = root.firstChild
+  var depth = 0
+  var children
+  var parent
 
   while (node) {
-
     if (utils.isElem(node)) {
-
       if (node.nodeName === 'BR') {
         if (!offset) {
           parent = node.parentNode
@@ -36,7 +34,6 @@ function decodePosition (root, offset) {
       }
 
       if (!node.firstChild) {
-
         while (!node.nextSibling) {
           if (!depth) break
 
@@ -53,8 +50,9 @@ function decodePosition (root, offset) {
       continue
     }
 
-    if (offset <= node.data.length)
+    if (offset <= node.data.length) {
       return { node: node, offset: offset }
+    }
 
     offset -= node.data.length
 

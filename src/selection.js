@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /**
  * Selection(start [, end]) holds information about a selection.
@@ -8,8 +8,9 @@
  * @return {Selection}
  */
 function Selection (start, end) {
-  if (!(this instanceof Selection))
+  if (!(this instanceof Selection)) {
     return new Selection(start, end)
+  }
 
   this.start = start
   this.end = end || start.slice()
@@ -43,13 +44,16 @@ Selection.prototype.isBackwards = function () {
  * @return {Boolean}
  */
 Selection.prototype.equals = function (other) {
-  if (!(other instanceof Selection))
+  if (!(other instanceof Selection)) {
     return false
+  }
 
-  return this.start[0] === other.start[0] &&
-         this.start[1] === other.start[1] &&
-         this.end[0] === other.end[0] &&
-         this.end[1] === other.end[1]
+  return (
+    this.start[0] === other.start[0] &&
+    this.start[1] === other.start[1] &&
+    this.end[0] === other.end[0] &&
+    this.end[1] === other.end[1]
+  )
 }
 
 /**
@@ -71,8 +75,9 @@ Selection.prototype.clone = function () {
  * @return {Boolean}
  */
 Selection.equals = function (first, second) {
-  if (!first || !second)
+  if (!first || !second) {
     return first === null && second === null
+  }
 
   return first instanceof Selection && first.equals(second)
 }

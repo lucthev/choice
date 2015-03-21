@@ -1,6 +1,6 @@
 # Various programs
 browserify := ./node_modules/.bin/browserify
-jshint := ./node_modules/.bin/jshint
+standard := ./node_modules/.bin/standard
 uglifyjs := ./node_modules/.bin/uglifyjs
 karma := ./node_modules/.bin/karma
 
@@ -13,7 +13,7 @@ dist/choice.js: $(all)
 	$(browserify) -s Choice $(src) | $(uglifyjs) -m -o $@
 
 lint:
-	$(jshint) src test
+	$(standard)
 
 clean:
 	rm -rf dist

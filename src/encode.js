@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 var utils = require('./utils')
 
@@ -14,10 +14,10 @@ var utils = require('./utils')
  * @return {Boolean}
  */
 function isLastChild (root, node) {
-
   while (node && node !== root) {
-    if (node.nextSibling)
+    if (node.nextSibling) {
       return false
+    }
 
     node = node.parentNode
   }
@@ -37,7 +37,6 @@ function textBefore (root, node) {
   var length = 0
 
   while (node && node !== root) {
-
     if (!node.previousSibling) {
       node = node.parentNode
       continue
@@ -49,11 +48,10 @@ function textBefore (root, node) {
       node = node.lastChild
     }
 
-    if (utils.isText(node))
+    if (utils.isText(node)) {
       length += node.data.length
-    else if (node.nodeName === 'BR') {
+    } else if (node.nodeName === 'BR') {
       // <br>s count as a newline character.
-
       length += 1
     }
   }
@@ -72,10 +70,10 @@ function textBefore (root, node) {
  * @return {Array}
  */
 function encodePosition (children, node, offset) {
-  var lastBR = false,
-      childIndex,
-      textIndex,
-      child
+  var lastBR = false
+  var childIndex
+  var textIndex
+  var child
 
   while (node) {
     if (utils.isText(node) || node.nodeName === 'BR') {
@@ -91,19 +89,21 @@ function encodePosition (children, node, offset) {
     } else {
       node = node.lastChild
 
-      if (utils.isText(node))
+      if (utils.isText(node)) {
         offset = node.data.length
-      else if (node.nodeName === 'BR') {
+      } else if (node.nodeName === 'BR') {
         offset = 1
         lastBR = true
-      } else
+      } else {
         offset = node.childNodes.length
+      }
     }
   }
 
   child = node
-  while (child.parentNode && !utils.isBlock(child))
+  while (child.parentNode && !utils.isBlock(child)) {
     child = child.parentNode
+  }
 
   childIndex = children.indexOf(child)
 
@@ -111,8 +111,9 @@ function encodePosition (children, node, offset) {
   if (childIndex < 0) return false
 
   // See https://github.com/lucthev/choice/issues/1
-  if (lastBR && isLastChild(child, node))
+  if (lastBR && isLastChild(child, node)) {
     offset -= 1
+  }
 
   textIndex = textBefore(child, node) + offset
 

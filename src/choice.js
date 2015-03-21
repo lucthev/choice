@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-var encodePosition = require('./encode'),
-    decodePosition = require('./decode'),
-    Selection = require('./selection'),
-    utils = require('./utils')
+var encodePosition = require('./encode')
+var decodePosition = require('./decode')
+var Selection = require('./selection')
+var utils = require('./utils')
 
 /**
  * Choice is a module for unobtrusively saving and restoring selections
@@ -13,12 +13,14 @@ var encodePosition = require('./encode'),
  * @param {Function} getChildren
  */
 function Choice (rootElem, getChildren) {
-  if (!(this instanceof Choice))
+  if (!(this instanceof Choice)) {
     return new Choice(rootElem, getChildren)
+  }
 
   // Because of some Firefox bugs.
-  if (!rootElem.contentEditable)
+  if (!rootElem.contentEditable) {
     throw new TypeError('Choice requires a contentEditable element.')
+  }
 
   if (!getChildren) {
     getChildren = function () {
@@ -37,25 +39,28 @@ function Choice (rootElem, getChildren) {
  * @return {Choice.Selection}
  */
 Choice.prototype.getSelection = function () {
-  var sel = window.getSelection(),
-      children,
-      start,
-      end
+  var sel = window.getSelection()
+  var children
+  var start
+  var end
 
-  if (!sel.rangeCount || document.activeElement !== this.elem)
+  if (!sel.rangeCount || document.activeElement !== this.elem) {
     return null
+  }
 
   children = this._getChildren()
 
   start = encodePosition(children, sel.anchorNode, sel.anchorOffset)
 
-  if (sel.isCollapsed)
+  if (sel.isCollapsed) {
     end = start
-  else if (start)
+  } else if (start) {
     end = encodePosition(children, sel.focusNode, sel.focusOffset)
+  }
 
-  if (!start || !end)
+  if (!start || !end) {
     return null
+  }
 
   return new Selection(start, end)
 }
@@ -67,14 +72,15 @@ Choice.prototype.getSelection = function () {
  * @param {Choice.Selection} selection
  */
 Choice.prototype.restore = function (selection) {
-  var sel = window.getSelection(),
-      range = document.createRange(),
-      children,
-      start,
-      end
+  var sel = window.getSelection()
+  var range = document.createRange()
+  var children
+  var start
+  var end
 
-  if (!(selection instanceof Selection))
+  if (!(selection instanceof Selection)) {
     throw TypeError('"' + selection + '" is not a valid selection.')
+  }
 
   children = this._getChildren()
 
@@ -93,8 +99,9 @@ Choice.prototype.restore = function (selection) {
   sel.removeAllRanges()
   sel.addRange(range)
 
-  if (end)
+  if (end) {
     sel.extend(end.node, end.offset)
+  }
 }
 
 /**

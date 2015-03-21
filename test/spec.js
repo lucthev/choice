@@ -1,20 +1,17 @@
-/* global describe, it, xit, expect, Choice, beforeEach, afterEach */
-
-'use strict';
+/*eslint-env jasmine */
+'use strict'
 
 describe('Choice', function () {
+  var Selection = window.Choice.Selection
 
-  var Selection = Choice.Selection
-
-  describe('#getSelection (rich mode)', function () {
-
+  describe('#getSelection', function () {
     beforeEach(function () {
       var el = this.elem = document.createElement('article')
       this.elem.setAttribute('contenteditable', true)
 
       document.body.appendChild(this.elem)
 
-      this.Choice = new Choice(this.elem, function () {
+      this.Choice = new window.Choice(this.elem, function () {
         return flattenLists(el)
       })
     })
@@ -127,7 +124,6 @@ describe('Choice', function () {
     })
 
     it('not collapsed (2).', function () {
-
       // Make the same selection, but backwards.
       placeCursor(this.elem, '<p>|One</p><p>Two|</p>', true)
 
@@ -167,7 +163,6 @@ describe('Choice', function () {
     })
 
     xit('should account for edge cases.', function () {
-
       // This test is failing; it has something to do with the space before 'three'.
       placeCursor(this.elem, '<p>One <strong><em>two<br>|</em></strong> three|</p>', true)
 
@@ -180,7 +175,6 @@ describe('Choice', function () {
     })
 
     it('edge cases (2).', function () {
-
       // This kind of behaviour can occur in Firefox.
       placeCursor(this.elem, '|<p>One</p>')
 
@@ -246,7 +240,6 @@ describe('Choice', function () {
     })
 
     it('Firefox selectall (2).', function () {
-
       // Firefox often leaves trailing <br>s.
       placeCursor(this.elem, '|<p>Stuff<br></p>|')
 
@@ -360,15 +353,14 @@ describe('Choice', function () {
     })
   })
 
-  describe('#restore (rich mode)', function () {
-
+  describe('#restore', function () {
     beforeEach(function () {
       var el = this.elem = document.createElement('article')
       this.elem.setAttribute('contenteditable', true)
 
       document.body.appendChild(this.elem)
 
-      this.Choice = new Choice(this.elem, function () {
+      this.Choice = new window.Choice(this.elem, function () {
         return flattenLists(el)
       })
     })
@@ -383,8 +375,8 @@ describe('Choice', function () {
       // Just save and restore.
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          target = this.elem.firstChild.firstChild
+      var sel = window.getSelection()
+      var target = this.elem.firstChild.firstChild
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -396,8 +388,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          target = this.elem.firstChild.firstChild
+      var sel = window.getSelection()
+      var target = this.elem.firstChild.firstChild
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -409,8 +401,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          target = this.elem.firstChild.childNodes[1].firstChild
+      var sel = window.getSelection()
+      var target = this.elem.firstChild.childNodes[1].firstChild
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -422,8 +414,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          target = this.elem.firstChild.firstChild
+      var sel = window.getSelection()
+      var target = this.elem.firstChild.firstChild
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -435,10 +427,10 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
+      var sel = window.getSelection()
 
-          // We actually expect the cursor to be IN the <strong>
-          target = this.elem.firstChild.childNodes[1].firstChild
+      // We actually expect the cursor to be IN the <strong>
+      var target = this.elem.firstChild.childNodes[1].firstChild
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -450,8 +442,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          target = this.elem.firstChild.childNodes[2]
+      var sel = window.getSelection()
+      var target = this.elem.firstChild.childNodes[2]
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -463,8 +455,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          target = this.elem.firstChild.firstChild
+      var sel = window.getSelection()
+      var target = this.elem.firstChild.firstChild
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -472,17 +464,16 @@ describe('Choice', function () {
     })
 
     it('should restore the selection (8).', function () {
-
       // The cursor cannot be placed in collapsed elements, so no
       // need to check that case.
       placeCursor(this.elem, '<p>The <span></span>|Big Short</p>')
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
+      var sel = window.getSelection()
 
-          // The selection should get bumped back to the first text node.
-          target = this.elem.firstChild.firstChild
+      // The selection should get bumped back to the first text node.
+      var target = this.elem.firstChild.firstChild
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -494,8 +485,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          target = this.elem.firstChild.childNodes[2]
+      var sel = window.getSelection()
+      var target = this.elem.firstChild.childNodes[2]
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -507,8 +498,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          target = this.elem.firstChild.childNodes[0]
+      var sel = window.getSelection()
+      var target = this.elem.firstChild.childNodes[0]
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -520,8 +511,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          target = this.elem.firstChild.childNodes[0]
+      var sel = window.getSelection()
+      var target = this.elem.firstChild.childNodes[0]
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -533,8 +524,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          target = this.elem.firstChild.childNodes[0]
+      var sel = window.getSelection()
+      var target = this.elem.firstChild.childNodes[0]
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -546,8 +537,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          target = document.querySelector('#s').firstChild
+      var sel = window.getSelection()
+      var target = document.querySelector('#s').firstChild
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -559,8 +550,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          target = document.querySelector('#s').firstChild
+      var sel = window.getSelection()
+      var target = document.querySelector('#s').firstChild
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -572,8 +563,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          target = document.querySelector('#s').firstChild
+      var sel = window.getSelection()
+      var target = document.querySelector('#s').firstChild
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -585,8 +576,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          target = this.elem.firstChild
+      var sel = window.getSelection()
+      var target = this.elem.firstChild
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -598,8 +589,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          target = this.elem.firstChild
+      var sel = window.getSelection()
+      var target = this.elem.firstChild
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -611,8 +602,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          target = this.elem.firstChild.childNodes[2]
+      var sel = window.getSelection()
+      var target = this.elem.firstChild.childNodes[2]
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -627,8 +618,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          target = document.querySelector('#e').firstChild
+      var sel = window.getSelection()
+      var target = document.querySelector('#e').firstChild
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -643,10 +634,10 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
+      var sel = window.getSelection()
 
-          // We expect the cursor to be at the beginning of 'the woods'
-          target = document.querySelector('#e').nextSibling
+      // We expect the cursor to be at the beginning of 'the woods'
+      var target = document.querySelector('#e').nextSibling
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -661,8 +652,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          target = document.querySelector('#e').nextSibling
+      var sel = window.getSelection()
+      var target = document.querySelector('#e').nextSibling
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -674,8 +665,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          target = this.elem.childNodes[1].firstChild
+      var sel = window.getSelection()
+      var target = this.elem.childNodes[1].firstChild
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -687,8 +678,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          target = this.elem.firstChild.firstChild
+      var sel = window.getSelection()
+      var target = this.elem.firstChild.firstChild
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(target)
@@ -704,9 +695,9 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          start = this.elem.firstChild.firstChild,
-          end = this.elem.lastChild.firstChild
+      var sel = window.getSelection()
+      var start = this.elem.firstChild.firstChild
+      var end = this.elem.lastChild.firstChild
 
       expect(sel.isCollapsed).toBe(false)
       expect(sel.anchorNode).toEqual(start)
@@ -720,9 +711,9 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          start = this.elem.firstChild,
-          end = this.elem.firstChild
+      var sel = window.getSelection()
+      var start = this.elem.firstChild
+      var end = this.elem.firstChild
 
       expect(sel.isCollapsed).toBe(false)
       expect(sel.anchorNode).toEqual(start)
@@ -739,9 +730,9 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          start = document.querySelector('#li').firstChild,
-          end = this.elem.firstChild.firstChild
+      var sel = window.getSelection()
+      var start = document.querySelector('#li').firstChild
+      var end = this.elem.firstChild.firstChild
 
       expect(sel.isCollapsed).toBe(false)
       expect(sel.anchorNode).toEqual(start)
@@ -759,8 +750,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          start = document.querySelector('#li').firstChild
+      var sel = window.getSelection()
+      var start = document.querySelector('#li').firstChild
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(start)
@@ -783,8 +774,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          start = document.querySelector('#li')
+      var sel = window.getSelection()
+      var start = document.querySelector('#li')
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(start)
@@ -796,8 +787,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          start = document.querySelector('#li')
+      var sel = window.getSelection()
+      var start = document.querySelector('#li')
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(start)
@@ -811,8 +802,8 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          start = document.querySelector('#li').firstChild
+      var sel = window.getSelection()
+      var start = document.querySelector('#li').firstChild
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(start)
@@ -827,9 +818,9 @@ describe('Choice', function () {
 
       this.Choice.restore(this.Choice.getSelection())
 
-      var sel = window.getSelection(),
-          start = document.querySelector('#li2').firstChild,
-          end = document.querySelector('#li1').firstChild
+      var sel = window.getSelection()
+      var start = document.querySelector('#li2').firstChild
+      var end = document.querySelector('#li1').firstChild
 
       expect(sel.isCollapsed).toBe(false)
       expect(sel.anchorNode).toEqual(start)
@@ -854,8 +845,8 @@ describe('Choice', function () {
 
       this.Choice.restore(s)
 
-      var sel = window.getSelection(),
-          start = document.querySelector('#li').firstChild
+      var sel = window.getSelection()
+      var start = document.querySelector('#li').firstChild
 
       expect(sel.isCollapsed).toBe(true)
       expect(sel.anchorNode).toEqual(start)
@@ -864,7 +855,7 @@ describe('Choice', function () {
   })
 
   describe('Choice.Selection should', function () {
-    var Selection = Choice.Selection
+    var Selection = window.Choice.Selection
 
     it('not use the same array for a collapsed selection', function () {
       var sel = new Selection([1, 3])
@@ -877,8 +868,8 @@ describe('Choice', function () {
     })
 
     it('return a new selection when calling #clone', function () {
-      var sel = new Selection([1, 1], [2, 2]),
-          clone = sel.clone()
+      var sel = new Selection([1, 1], [2, 2])
+      var clone = sel.clone()
 
       expect(sel === clone).toBe(false)
 
@@ -890,8 +881,8 @@ describe('Choice', function () {
     })
 
     it('compare two selections', function () {
-      var sel = new Selection([1, 1]),
-          other = new Selection([1, 1], [2, 2])
+      var sel = new Selection([1, 1])
+      var other = new Selection([1, 1], [2, 2])
 
       expect(Selection.equals(null, null)).toBe(true)
       expect(Selection.equals(sel, sel)).toBe(true)
@@ -916,8 +907,8 @@ describe('Choice', function () {
  * @param {Boolean} backwards
  */
 function selectRange (range, backwards) {
-  var sel = window.getSelection(),
-      endRange
+  var sel = window.getSelection()
+  var endRange
 
   sel.removeAllRanges()
 
@@ -926,15 +917,18 @@ function selectRange (range, backwards) {
     endRange.collapse(!backwards)
     sel.addRange(endRange)
 
-    if (backwards)
+    if (backwards) {
       sel.extend(range.startContainer, range.startOffset)
-    else
+    } else {
       sel.extend(range.endContainer, range.endOffset)
-  } else sel.addRange(range)
+    }
+  } else {
+    sel.addRange(range)
+  }
 }
 
 /**
- * placeCursor(elem, html) sets the innerHTML of elem to be html;
+ * placeCursor(elem, html) sets the innerHTML of elem to be html
  * optionally places the cursor after '|'s.
  * Example:
  *   placeCursor(someElem, '<p>Mil|k & H|oney</p>')
@@ -948,10 +942,10 @@ function selectRange (range, backwards) {
  * @param {Boolean} backwards
  */
 function placeCursor (elem, html, backwards) {
-  var range = document.createRange(),
-      markers,
-      parent,
-      i
+  var range = document.createRange()
+  var markers
+  var parent
+  var i
 
   if (/\|/.test(html)) {
     elem.focus()
@@ -962,10 +956,11 @@ function placeCursor (elem, html, backwards) {
 
     range.setStartBefore(markers[0])
 
-    if (markers.length === 1)
+    if (markers.length === 1) {
       range.setEndAfter(markers[0])
-    else
+    } else {
       range.setEndAfter(markers[1])
+    }
 
     for (i = 0; i < markers.length; i += 1) {
       parent = markers[i].parentNode
@@ -980,16 +975,16 @@ function placeCursor (elem, html, backwards) {
 }
 
 function flattenLists (elem) {
-  var children = Array.prototype.slice.call(elem.childNodes),
-        listItems,
-        child,
-        i
+  var children = [].slice.call(elem.childNodes)
+  var listItems
+  var child
+  var i
 
   for (i = 0; i < children.length; i += 1) {
     child = children[i]
 
     if (/^[OU]L$/.test(child.nodeName)) {
-      listItems = Array.prototype.slice.call(child.childNodes)
+      listItems = [].slice.call(child.childNodes)
       listItems.unshift(i, 1)
 
       i += listItems.length - 3
@@ -1000,4 +995,3 @@ function flattenLists (elem) {
 
   return children
 }
-
