@@ -1,4 +1,4 @@
-/* global describe, it, expect, Choice, beforeEach, afterEach */
+/* global describe, it, xit, expect, Choice, beforeEach, afterEach */
 
 'use strict';
 
