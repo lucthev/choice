@@ -17,6 +17,24 @@ function Selection (start, end) {
 }
 
 /**
+ * absoluteStart() returns the endpoint that is first in document order.
+ *
+ * @return {Array}
+ */
+Selection.prototype.absoluteStart = function () {
+  return this.isBackwards() ? this.end : this.start
+}
+
+/**
+ * absoluteStart() returns the endpoint that is first in document order.
+ *
+ * @return {Array}
+ */
+Selection.prototype.absoluteEnd = function () {
+  return this.isBackwards() ? this.start : this.end
+}
+
+/**
  * isCollapsed() determines if the Selection represents a collapsed
  * selection.
  *
