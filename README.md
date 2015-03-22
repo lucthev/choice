@@ -81,9 +81,27 @@ Sets the user’s selection to match that represented by the given instance of `
 
 This method returns true if the APIs Choice relies on exist. See [Browser support](#browser-support) below.
 
+<hr>
+
 ### Selection
 
-`getSelection` returns an instance of `Choice.Selection`. This class has several instance and static methods:
+`Choice#getSelection()` returns an instance of `Choice.Selection`.
+
+#### Selection#start
+
+An array containing the integer pair corresponding to the start of the selection.
+
+#### Selection#end
+
+An array containing the integer pair corresponding to the end of the selection.
+
+#### Selection#absoluteStart( )
+
+In a right-to-left selection, `Selection#start` is after `Selection#end`. `Selection#absoluteStart()` returns the endpoint that occurs first, visually, in the document.
+
+#### Selection#absoluteEnd( )
+
+As above, but returns the last endpoint.
 
 #### Selection#isCollapsed( )
 
@@ -97,7 +115,7 @@ Returns a boolean indicating whether the selection represents a right-to-left se
 
 Returns a new selection identical to the selection this method was called on.
 
-#### Selection.equals( other )
+#### Selection#equals( other )
 
 Returns a boolean indicating whether or not `other` and the selection this method was called on represent the same selection.
 
@@ -107,7 +125,7 @@ This static method is similar to `Selection#equals`, but can be used to determin
 
 ## Motivation
 
-Choice's main purpose is to unobtrusively save and restore the selection in `contenteditable` regions. This can help “standardize” certain behaviours when working with the contenteditable API. Consider the following markup; it’s faily typical in rich text editing.
+Choice’s main purpose is to unobtrusively save and restore the selection in `contenteditable` regions. This can help “standardize” certain behaviours when working with the contenteditable API. Consider the following markup; it’s faily typical in rich text editing.
 
 ```html
 <p>Some <b><i>fancy</i></b> text</p>
@@ -162,10 +180,10 @@ Additionally, Firefox, for whatever reason, allows multiple selections in `conte
 
 ## Browser support
 
-Unfortunately, Choice only works in browsers that implement the native [`Selection#extend`][extend] method. Essentially, that’s all browsers except Internet Explorer (yes, ALL versions).
+Unfortunately, Choice only works in browsers that implement the native [`Selection#extend`][extend] method. Essentially, that’s all major browsers except Internet Explorer.
 
 ## License
 
-MIT.
+MIT
 
 [extend]: https://developer.mozilla.org/en-US/docs/Web/API/Selection.extend

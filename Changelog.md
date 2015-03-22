@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.0
+
+- Added `Selection#absoluteStart()` and `Selection#absoluteEnd()`.
+
 ## 1.3.0
 
 - Added the static function `Selection.equals()`.
