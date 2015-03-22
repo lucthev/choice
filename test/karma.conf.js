@@ -8,7 +8,8 @@ module.exports = function (config) {
     reporters: ['dots'],
     files: [
       '../dist/choice.js',
-      './spec.js'
+      './utils.js',
+      './*.spec.js'
     ],
     singleRun: true
   })
