@@ -16,8 +16,8 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([0, 5]))
-    expect(sel.isCollapsed()).toBe(true)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(true)
+    expect(sel.isBackwards).toBe(false)
   })
 
   it('collapsed selection (2)', function () {
@@ -26,8 +26,8 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([0, 0]))
-    expect(sel.isCollapsed()).toBe(true)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(true)
+    expect(sel.isBackwards).toBe(false)
   })
 
   it('collapsed selection (3)', function () {
@@ -36,8 +36,8 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([1, 5]))
-    expect(sel.isCollapsed()).toBe(true)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(true)
+    expect(sel.isBackwards).toBe(false)
   })
 
   it('collapsed selection (4)', function () {
@@ -46,8 +46,8 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([0, 8]))
-    expect(sel.isCollapsed()).toBe(true)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(true)
+    expect(sel.isBackwards).toBe(false)
   })
 
   it('collapsed selection (5)', function () {
@@ -56,8 +56,8 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([0, 8]))
-    expect(sel.isCollapsed()).toBe(true)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(true)
+    expect(sel.isBackwards).toBe(false)
   })
 
   it('collapsed selection (6)', function () {
@@ -66,8 +66,8 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([1, 9]))
-    expect(sel.isCollapsed()).toBe(true)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(true)
+    expect(sel.isBackwards).toBe(false)
   })
 
   it('should treat <br>s as newlines (collapsed selection)', function () {
@@ -76,8 +76,8 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([0, 9]))
-    expect(sel.isCollapsed()).toBe(true)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(true)
+    expect(sel.isBackwards).toBe(false)
   })
 
   it('<br>s, collapsed selection (2)', function () {
@@ -86,8 +86,8 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([0, 8]))
-    expect(sel.isCollapsed()).toBe(true)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(true)
+    expect(sel.isBackwards).toBe(false)
   })
 
   it('<br>s, collapsed selection (3)', function () {
@@ -99,8 +99,8 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([2, 16]))
-    expect(sel.isCollapsed()).toBe(true)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(true)
+    expect(sel.isBackwards).toBe(false)
   })
 
   it('should return the start and end points when selection is not collapsed', function () {
@@ -109,8 +109,8 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([0, 0], [1, 3]))
-    expect(sel.isCollapsed()).toBe(false)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(false)
+    expect(sel.isBackwards).toBe(false)
   })
 
   it('not collapsed (2)', function () {
@@ -120,8 +120,8 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([1, 3], [0, 0]))
-    expect(sel.isCollapsed()).toBe(false)
-    expect(sel.isBackwards()).toBe(true)
+    expect(sel.isCollapsed).toBe(false)
+    expect(sel.isBackwards).toBe(true)
   })
 
   it('not collapsed (3)', function () {
@@ -130,8 +130,8 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([1, 3], [0, 4]))
-    expect(sel.isCollapsed()).toBe(false)
-    expect(sel.isBackwards()).toBe(true)
+    expect(sel.isCollapsed).toBe(false)
+    expect(sel.isBackwards).toBe(true)
   })
 
   it('not collapsed (4)', function () {
@@ -140,16 +140,16 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([1, 5], [1, 6]))
-    expect(sel.isCollapsed()).toBe(false)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(false)
+    expect(sel.isBackwards).toBe(false)
 
     placeCursor(elem, '<h1>Things</h1><p>Words|<br>|Stuff</p><p>More</p>', true)
 
     sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([1, 6], [1, 5]))
-    expect(sel.isCollapsed()).toBe(false)
-    expect(sel.isBackwards()).toBe(true)
+    expect(sel.isCollapsed).toBe(false)
+    expect(sel.isBackwards).toBe(true)
   })
 
   xit('should account for edge cases', function () {
@@ -160,8 +160,8 @@ describe('Choice#getSelection', function () {
 
     expect(sel)
       .toEqual(new Selection([0, 14], [0, 8]))
-    expect(sel.isCollapsed()).toBe(false)
-    expect(sel.isBackwards()).toBe(true)
+    expect(sel.isCollapsed).toBe(false)
+    expect(sel.isBackwards).toBe(true)
   })
 
   it('edge cases (2)', function () {
@@ -171,16 +171,16 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([0, 0]))
-    expect(sel.isCollapsed()).toBe(true)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(true)
+    expect(sel.isBackwards).toBe(false)
 
     placeCursor(elem, '<p>One</p><p>Two</p>|')
 
     sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([1, 3]))
-    expect(sel.isCollapsed()).toBe(true)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(true)
+    expect(sel.isBackwards).toBe(false)
   })
 
   it('edge cases (3)', function () {
@@ -189,8 +189,8 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([1, 3], [0, 0]))
-    expect(sel.isCollapsed()).toBe(false)
-    expect(sel.isBackwards()).toBe(true)
+    expect(sel.isCollapsed).toBe(false)
+    expect(sel.isBackwards).toBe(true)
   })
 
   it('edge cases (4)', function () {
@@ -199,24 +199,24 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([0, 3]))
-    expect(sel.isCollapsed()).toBe(true)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(true)
+    expect(sel.isBackwards).toBe(false)
 
     placeCursor(elem, '<p>A <strong><em>b</em>|</strong> c</p>')
 
     sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([0, 3]))
-    expect(sel.isCollapsed()).toBe(true)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(true)
+    expect(sel.isBackwards).toBe(false)
 
     placeCursor(elem, '<p>A <strong><em>b</em></strong>| c</p>')
 
     sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([0, 3]))
-    expect(sel.isCollapsed()).toBe(true)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(true)
+    expect(sel.isBackwards).toBe(false)
   })
 
   it('Firefox selectall', function () {
@@ -225,8 +225,8 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([0, 0]))
-    expect(sel.isCollapsed()).toBe(true)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(true)
+    expect(sel.isBackwards).toBe(false)
   })
 
   it('Firefox selectall (2)', function () {
@@ -236,8 +236,8 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([0, 0], [0, 5]))
-    expect(sel.isCollapsed()).toBe(false)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(false)
+    expect(sel.isBackwards).toBe(false)
   })
 
   it('should return null when the cursor is not in the selection', function () {
@@ -285,16 +285,16 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([1, 0]))
-    expect(sel.isCollapsed()).toBe(true)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(true)
+    expect(sel.isBackwards).toBe(false)
 
     placeCursor(elem, '<ul><li>One</li><li>Two|</li><li>Three</li></ul>')
 
     sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([1, 3]))
-    expect(sel.isCollapsed()).toBe(true)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(true)
+    expect(sel.isBackwards).toBe(false)
   })
 
   it('should consider list items as blocks (2)', function () {
@@ -303,8 +303,8 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([1, 7]))
-    expect(sel.isCollapsed()).toBe(true)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(true)
+    expect(sel.isBackwards).toBe(false)
   })
 
   it('should consider list items as blocks (3)', function () {
@@ -313,8 +313,8 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([1, 7]))
-    expect(sel.isCollapsed()).toBe(true)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(true)
+    expect(sel.isBackwards).toBe(false)
   })
 
   it('should consider list items as blocks (4)', function () {
@@ -325,8 +325,8 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([2, 1]))
-    expect(sel.isCollapsed()).toBe(true)
-    expect(sel.isBackwards()).toBe(false)
+    expect(sel.isCollapsed).toBe(true)
+    expect(sel.isBackwards).toBe(false)
   })
 
   it('should consider list items as blocks (5)', function () {
@@ -338,8 +338,8 @@ describe('Choice#getSelection', function () {
     var sel = choice.getSelection()
 
     expect(sel).toEqual(new Selection([3, 3], [0, 0]))
-    expect(sel.isCollapsed()).toBe(false)
-    expect(sel.isBackwards()).toBe(true)
+    expect(sel.isCollapsed).toBe(false)
+    expect(sel.isBackwards).toBe(true)
   })
 
   function setup () {

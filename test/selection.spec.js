@@ -49,15 +49,15 @@ describe('Selection', function () {
     var forward = new Selection([1, 2], [3, 4])
     var backward = new Selection([3, 4], [1, 2])
 
-    expect(forward.absoluteStart()).toEqual(forward.start)
-    expect(backward.absoluteStart()).toEqual(backward.end)
+    expect(forward.absoluteStart).toEqual(forward.start)
+    expect(backward.absoluteStart).toEqual(backward.end)
   })
 
   it('#absoluteEnd returns the last endpoint', function () {
     var forward = new Selection([1, 2], [3, 4])
     var backward = new Selection([3, 4], [1, 2])
 
-    expect(forward.absoluteEnd()).toEqual(forward.end)
-    expect(backward.absoluteEnd()).toEqual(backward.start)
+    expect(forward.absoluteEnd).toEqual(forward.end)
+    expect(backward.absoluteEnd).toEqual(backward.start)
   })
 })

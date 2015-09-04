@@ -84,7 +84,7 @@ Choice.prototype.restore = function (selection) {
 
   children = this._getChildren()
 
-  if (selection.isCollapsed()) {
+  if (selection.isCollapsed) {
     start = decodePosition(children[selection.end[0]], selection.end[1])
   } else {
     start = decodePosition(children[selection.start[0]], selection.start[1])
