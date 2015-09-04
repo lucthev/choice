@@ -3,6 +3,8 @@ import decodePosition from './decode'
 import Selection from './selection'
 import toArray from './utils'
 
+const USE_EXTEND = typeof window.getSelection().extend === 'function'
+
 /**
  * Choice is a module for unobtrusively saving and restoring selections
  * in a contenteditable element.
@@ -55,7 +57,6 @@ class Choice {
    */
   restore (selection) {
     let sel = window.getSelection()
-    let range = document.createRange()
 
     if (!(selection instanceof Selection)) {
       throw TypeError(`${selection} is not a valid selection.`)
@@ -73,28 +74,29 @@ class Choice {
 
     this.elem.focus()
 
-    range.setStart(start.node, start.offset)
-    range.setEnd(start.node, start.offset)
+    let range = document.createRange()
+    if (USE_EXTEND) {
+      range.setStart(start.node, start.offset)
+      range.setEnd(start.node, start.offset)
 
-    sel.removeAllRanges()
-    sel.addRange(range)
+      sel.removeAllRanges()
+      sel.addRange(range)
 
-    if (end) {
-      sel.extend(end.node, end.offset)
+      if (end) {
+        sel.extend(end.node, end.offset)
+      }
+    } else {
+      end = end || start
+      if (selection.isBackwards) {
+        [start, end] = [end, start]
+      }
+
+      range.setStart(start.node, start.offset)
+      range.setEnd(end.node, end.offset)
+      sel.removeAllRanges()
+      sel.addRange(range)
     }
   }
-}
-
-/**
- * Choice.support() determines if the APIs Choice relies on are
- * present, namely the native Selection#extend()
- *
- * @return {Boolean}
- */
-Choice.support = function () {
-  let sel = window.getSelection()
-
-  return document.createRange && typeof sel.extend === 'function'
 }
 
 // Provide the Selection constructor.
