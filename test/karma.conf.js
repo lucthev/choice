@@ -7,7 +7,7 @@ module.exports = function (config) {
     frameworks: ['jasmine'],
     reporters: ['dots'],
     files: [
-      '../dist/choice.js',
+      '../choice.min.js',
       './utils.js',
       './*.spec.js'
     ],

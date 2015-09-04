@@ -1,27 +1,32 @@
-# Various programs
 browserify := ./node_modules/.bin/browserify
+babel := ./node_modules/.bin/babel
 standard := ./node_modules/.bin/standard
 uglifyjs := ./node_modules/.bin/uglifyjs
 karma := ./node_modules/.bin/karma
 
-# Build options
-src := src/choice.js
-all := $(shell $(browserify) --list $(src))
+srcfiles := $(wildcard src/*.js)
+libfiles := $(patsubst src/%.js,lib/%.js,$(srcfiles))
 
-dist/choice.js: $(all)
-	@mkdir -p dist
-	$(browserify) -s Choice $(src) | $(uglifyjs) -m -o $@
+choice.min.js: $(libfiles)
+	$(browserify) -s Choice lib/choice.js | $(uglifyjs) -m -o $@
+
+debug: $(libfiles)
+	$(browserify) -s Choice lib/choice.js -o choice.min.js
+
+lib/%.js: src/%.js
+	@mkdir -p lib
+	$(babel) $< -o $@
 
 lint:
-	$(standard)
+	$(standard) src/**/*.js
 
 clean:
-	rm -rf dist
+	rm -rf lib/ choice.min.js
 
-test: lint dist/choice.js
+test: choice.min.js
 	$(karma) start test/karma.conf.js
 
-publish: test
+publish: lint test
 	npm publish
 
-.PHONY: clean lint test publish
+.PHONY: debug lint clean test publish
