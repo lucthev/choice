@@ -34,9 +34,9 @@ Choice represents the endpoints of a selection as an integer pair `[childIndex, 
 
 ## API
 
-### new Choice( element [, getChildren ] )
+### new Choice( element[, getChildren ] )
 
-Creates an instance of Choice. The `new` constructor is optional. `element` is the root `contenteditable` element that represent the “document” of the editor.
+Creates an instance of Choice. `element` is the root `contenteditable` element that represent the “document” of the editor.
 
 Although working with child indices may work for simple use cases, like the example above, the shortcomings of that method quickly become evident when your editor produces more complex markup. Consider:
 
@@ -54,7 +54,7 @@ Although working with child indices may work for simple use cases, like the exam
 </article>
 ```
 
-In this case, using child indices wouldn’t work; the “blocks” of text aren’t direct children of the “document”. For these situations, Choice takes a second paramater, `getChildren`, a function that return an array containing the relevant “blocks” of text. For the above example, `getChildren` might look like:
+In this case, using child indices wouldn’t work; the “blocks” of text aren’t direct children of the “document”. For these situations, Choice takes a second parameter, `getChildren`, a function that return an array containing the relevant “blocks” of text. For the above example, `getChildren` might look like:
 
 ```js
 function getChildren() {
@@ -69,17 +69,13 @@ If a `getChildren` function is not given, Choice defaults to using the root elem
 
 ### Choice#getSelection( )
 
-Returns an an instance of `Choice.Selection`. This has two properties, `start` and `end`, which contain the two integer pairs representing the start and end points of the selection. See below for more information on `Choice.Selection`.
+Returns an an instance of [`Choice.Selection`](#selection). This has two properties, `start` and `end`, which contain the two integer pairs representing the start and end points of the selection. See below for more information on `Choice.Selection`.
 
 If the user’s selection is not contained within the root element, `getSelection` returns `null`.
 
 ### Choice#restore( savedSelection )
 
-Sets the user’s selection to match that represented by the given instance of `Choice.Selection`.
-
-### Choice.support( )
-
-This method returns true if the APIs Choice relies on exist. See [Browser support](#browser-support) below.
+Sets the user’s selection to match that represented by the given instance of [`Choice.Selection`](#selection).
 
 <hr>
 
@@ -95,21 +91,21 @@ An array containing the integer pair corresponding to the start of the selection
 
 An array containing the integer pair corresponding to the end of the selection.
 
-#### Selection#absoluteStart( )
+#### Selection#absoluteStart
 
-In a right-to-left selection, `Selection#start` is after `Selection#end`. `Selection#absoluteStart()` returns the endpoint that occurs first, visually, in the document.
+In a right-to-left selection, `Selection#start` is after `Selection#end`. `Selection#absoluteStart` is a getter that returns the endpoint that occurs first, visually, in the document.
 
-#### Selection#absoluteEnd( )
+#### Selection#absoluteEnd
 
 As above, but returns the last endpoint.
 
-#### Selection#isCollapsed( )
+#### Selection#isCollapsed
 
-Returns a boolean indicating whether the endpoints of the selection are identical.
+Getter that returns a boolean indicating whether the endpoints of the selection are identical.
 
-#### Selection#isBackwards( )
+#### Selection#isBackwards
 
-Returns a boolean indicating whether the selection represents a right-to-left selection.
+Getter that returns a boolean indicating whether the selection represents a selection in the direction opposite to the text direction.
 
 #### Selection#clone( )
 
@@ -176,11 +172,34 @@ Naively swapping the paragraph for a heading would (probably, depending on the b
 
 There are some restriction to saving and restoring the selection. Anything that would mess up the integer pairs representing the endpoints of the selection will result in a poorly restored selection. This includes, but may not be limited to, inserting/removing “blocks” or inserting/removing text. If you plan on doing those things, you should update the saved selection manually to account for your changes.
 
-Additionally, Firefox, for whatever reason, allows multiple selections in `contenteditable` regions. Choice has inconsistent behaviour when there are multiple selection regions. My advice? It’s not worth fussing over.
-
 ## Browser support
 
-Unfortunately, Choice only works in browsers that implement the native [`Selection#extend`][extend] method. Essentially, that’s all major browsers except Internet Explorer.
+Choice works best in browsers implement the native [`Selection#extend`][extend] method (all browsers except Internet Explorer). In Internet Explorer, Choice identically except that restored selections do not have any directionality. See the following for an example of what this means:
+
+```html
+<!-- Starting with a collapsed selection: -->
+<p>12|34</p>
+
+<!-- Shift+Right; the selection is now left-to-right. -->
+<p>12|3|4</p>
+
+<!-- Save and restore the selection. -->
+
+<!--
+In browsers that support Selection#extend, the restored selection “knows” that
+it was left-to-right; pressing Shift-Left collapses the selection back to its
+origin:
+-->
+<p>12|34</p>
+
+<!--
+In Internet Explorer, because the selection has no directionality, the
+selection *always* gets extended:
+-->
+<p>1|23|4</p>
+```
+
+This problem will only manifest itself when saving and restoring the selection excessively often; be mindful of this issue, and try to save and restore the selection only when necessary.
 
 ## License
 

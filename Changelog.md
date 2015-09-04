@@ -1,5 +1,35 @@
 # Changelog
 
+## 2.0.0
+
+This major release brings about a few API changes and wider browser support.
+
+API changes are limited to Choice.Selection; the `absoluteStart`, `absoluteEnd`, `isCollapsed`, and `isBackwards` methods have instead been turned into getters. This means that the following code:
+
+```js
+var c = new Choice(someElement)
+var s = c.getSelection()
+
+var isCollapsed = s.isCollapsed()
+var isBackwards = s.isBackwards()
+var absoluteStart = s.absoluteStart()
+var absoluteEnd = s.absoluteEnd()
+```
+
+Should, in `v2` onwards, be written as:
+
+```js
+var c = new Choice(someElement)
+var s = c.getSelection()
+
+var isCollapsed = s.isCollapsed // Not a function call
+var isBackwards = s.isBackwards
+var absoluteStart = s.absoluteStart
+var absoluteEnd = s.absoluteEnd
+```
+
+Additionally, Choice now works in browsers without the native `Selection#extend` method (namely, Internet Explorer).
+
 ## 1.4.0
 
 - Added `Selection#absoluteStart()` and `Selection#absoluteEnd()`.
