@@ -1,10 +1,10 @@
+/**
+ * Selection(start[, end]) holds information about a selection.
+ *
+ * @param {Array} start
+ * @param {Array} end
+ */
 class Selection {
-  /**
-   * Selection(start[, end]) holds information about a selection.
-   *
-   * @param {Array} start
-   * @param {Array} end
-   */
   constructor (start, end = start.slice()) {
     this.start = start
     this.end = end

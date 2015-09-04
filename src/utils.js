@@ -1,34 +1,28 @@
-'use strict'
+import blockElements from 'block-elements'
 
-var blocks = require('block-elements').map(function (block) {
-  return block.toUpperCase()
-})
-
-if (blocks.indexOf('LI') < 0) {
-  blocks.push('LI')
-}
-
-exports.toArray = function (val) {
+export function toArray (val) {
   return [].slice.call(val)
 }
 
-exports.isText = function (node) {
+export function isText (node) {
   return node && node.nodeType === window.Node.TEXT_NODE
 }
 
-var isElem = exports.isElem = function (node) {
+export function isElem (node) {
   return node && node.nodeType === window.Node.ELEMENT_NODE
 }
 
-var blockRegex = new RegExp('^(' + blocks.join('|') + ')$')
+let blocks = { LI: true }
+blockElements.forEach(function (name) {
+  blocks[name.toUpperCase()] = true
+})
 
 /**
- * isBlock(elem) determines if an element is a visual block according
- * to the above RegExp.
+ * isBlock(elem) determines if an element is a visual block.
  *
  * @param {Node} elem
  * @return {Boolean}
  */
-exports.isBlock = function (elem) {
-  return isElem(elem) && blockRegex.test(elem.nodeName)
+export function isBlock (node) {
+  return node && blocks[node.nodeName]
 }

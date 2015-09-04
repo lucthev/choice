@@ -1,6 +1,4 @@
-'use strict'
-
-var utils = require('./utils')
+import {isElem, toArray} from './utils'
 
 /**
  * decodePosition(root, offset) returns the node and the offset within
@@ -15,17 +13,15 @@ var utils = require('./utils')
  * }
  */
 function decodePosition (root, offset) {
-  var node = root.firstChild
-  var depth = 0
-  var children
-  var parent
+  let node = root.firstChild
+  let depth = 0
 
   while (node) {
-    if (utils.isElem(node)) {
+    if (isElem(node)) {
       if (node.nodeName === 'BR') {
         if (!offset) {
-          parent = node.parentNode
-          children = utils.toArray(parent.childNodes)
+          let parent = node.parentNode
+          let children = toArray(parent.childNodes)
 
           return { node: parent, offset: children.indexOf(node) }
         }
@@ -51,7 +47,7 @@ function decodePosition (root, offset) {
     }
 
     if (offset <= node.data.length) {
-      return { node: node, offset: offset }
+      return { node, offset }
     }
 
     offset -= node.data.length
@@ -67,7 +63,7 @@ function decodePosition (root, offset) {
   }
 
   // We shouldn't reach here, in theory.
-  throw new Error('Invalid selection indices.')
+  throw RangeError('Invalid selection indices.')
 }
 
-module.exports = decodePosition
+export default decodePosition

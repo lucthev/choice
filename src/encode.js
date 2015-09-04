@@ -1,6 +1,4 @@
-'use strict'
-
-var utils = require('./utils')
+import {isElem, isBlock, isText} from './utils'
 
 /**
  * isLastChild(root, node) determines if the Node node is the last
@@ -34,7 +32,7 @@ function isLastChild (root, node) {
  * @return {Int}
  */
 function textBefore (root, node) {
-  var length = 0
+  let length = 0
 
   while (node && node !== root) {
     if (!node.previousSibling) {
@@ -44,11 +42,11 @@ function textBefore (root, node) {
 
     node = node.previousSibling
 
-    while (utils.isElem(node) && node.lastChild) {
+    while (isElem(node) && node.lastChild) {
       node = node.lastChild
     }
 
-    if (utils.isText(node)) {
+    if (isText(node)) {
       length += node.data.length
     } else if (node.nodeName === 'BR') {
       // <br>s count as a newline character.
@@ -70,13 +68,10 @@ function textBefore (root, node) {
  * @return {Array}
  */
 function encodePosition (children, node, offset) {
-  var lastBR = false
-  var childIndex
-  var textIndex
-  var child
+  let lastBR = false
 
   while (node) {
-    if (utils.isText(node) || node.nodeName === 'BR') {
+    if (isText(node) || node.nodeName === 'BR') {
       break
     } else if (!node.isContentEditable) {
       node = node.nextSibling
@@ -89,7 +84,7 @@ function encodePosition (children, node, offset) {
     } else {
       node = node.lastChild
 
-      if (utils.isText(node)) {
+      if (isText(node)) {
         offset = node.data.length
       } else if (node.nodeName === 'BR') {
         offset = 1
@@ -100,12 +95,12 @@ function encodePosition (children, node, offset) {
     }
   }
 
-  child = node
-  while (child.parentNode && !utils.isBlock(child)) {
+  let child = node
+  while (child.parentNode && !isBlock(child)) {
     child = child.parentNode
   }
 
-  childIndex = children.indexOf(child)
+  let childIndex = children.indexOf(child)
 
   // If the selection is not in the root's tree, do nothing.
   if (childIndex < 0) return false
@@ -115,9 +110,9 @@ function encodePosition (children, node, offset) {
     offset -= 1
   }
 
-  textIndex = textBefore(child, node) + offset
+  let textIndex = textBefore(child, node) + offset
 
   return [childIndex, textIndex]
 }
 
-module.exports = encodePosition
+export default encodePosition
