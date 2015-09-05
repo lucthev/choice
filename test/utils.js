@@ -72,12 +72,7 @@ function placeCursor (elem, html, backwards) {
 }
 
 function flattenLists (elem) {
-  return [].reduce.call(elem.childNodes, function (acc, item) {
-    if (/^[OU]L$/.test(item.nodeName)) {
-      return acc.concat([].slice.call(item.childNodes))
-    }
+  var elements = ['p', 'h1', 'h2', 'li']
 
-    acc.push(item)
-    return acc
-  }, [])
+  return [].slice.call(document.querySelectorAll(elements.join()))
 }

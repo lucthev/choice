@@ -1,4 +1,4 @@
-import {isElem, isBlock, isText} from './utils'
+import {isElem, isText} from './utils'
 
 /**
  * isLastChild(root, node) determines if the Node node is the last
@@ -96,14 +96,14 @@ function encodePosition (children, node, offset) {
   }
 
   let child = node
-  while (child.parentNode && !isBlock(child)) {
+  let childIndex = children.indexOf(child)
+  while (childIndex < 0 && child.parentNode) {
     child = child.parentNode
+    childIndex = children.indexOf(child)
   }
 
-  let childIndex = children.indexOf(child)
-
   // If the selection is not in the root's tree, do nothing.
-  if (childIndex < 0) return false
+  if (childIndex < 0) return null
 
   // See https://github.com/lucthev/choice/issues/1
   if (lastBR && isLastChild(child, node)) {

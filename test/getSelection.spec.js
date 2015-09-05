@@ -279,6 +279,12 @@ describe('Choice#getSelection', function () {
     document.body.removeChild(input)
   })
 
+  it('return null (4)', function () {
+    placeCursor(elem, '<p>A</p>St|uff<p>B</p>')
+
+    expect(choice.getSelection()).toEqual(null)
+  })
+
   it('should consider list items as blocks', function () {
     placeCursor(elem, '<ul><li>One</li><li>|Two</li><li>Three</li></ul>')
 
