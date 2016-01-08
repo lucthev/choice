@@ -101,5 +101,6 @@ class Choice {
 
 // Provide the Selection constructor.
 Choice.Selection = Selection
+Choice.Choice = Choice
 
 export default Choice
